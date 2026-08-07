@@ -1,0 +1,28 @@
+# Render Blueprint — Infrastructure as Code
+# Deploy with: Connect repo to Render, it auto-detects this file.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: ig-app-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    region: oregon
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5000"
+      - key: MONGODB_URI
+        sync: false # Set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false # Set to your Vercel frontend URLs
+      - key: LOG_LEVEL
+        value: info
