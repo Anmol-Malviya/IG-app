@@ -59,7 +59,7 @@ export function PlannerCalendar({
     useSensor(PointerSensor, { activationConstraint: { distance: 7 } })
   );
   const isWeek = days.length > 1;
-  const gridTemplate = `72px repeat(${days.length}, minmax(${isWeek ? "154px" : "520px"}, 1fr))`;
+  const gridTemplate = `64px repeat(${days.length}, minmax(${isWeek ? "144px" : "520px"}, 1fr))`;
 
   const handleDragStart = (dragEvent: DragStartEvent) => {
     const event = dragEvent.active.data.current?.event as Schedule | undefined;
@@ -108,15 +108,15 @@ export function PlannerCalendar({
     >
       <div
         data-scheduler-scroll
-        className="hidden h-[calc(100dvh-282px)] min-h-[480px] overflow-auto overscroll-contain xl:block"
+        className="hidden h-[calc(100dvh-276px)] min-h-[500px] overflow-auto overscroll-contain bg-white xl:block"
       >
-        <div className={cn("relative", isWeek ? "min-w-[1150px]" : "min-w-[720px]")}>
+        <div className={cn("relative", isWeek ? "min-w-[1080px]" : "min-w-[700px]")}>
           <div
-            className="sticky top-0 z-30 grid border-b border-slate-200 bg-white/95 backdrop-blur-xl"
+            className="sticky top-0 z-30 grid border-b border-slate-200/80 bg-white/95 backdrop-blur-xl"
             style={{ gridTemplateColumns: gridTemplate }}
           >
-            <div className="flex h-[62px] items-center justify-center border-r border-slate-200 bg-slate-50/70">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.13em] text-slate-400">
+            <div className="flex h-[60px] items-center justify-center border-r border-slate-200/80 bg-slate-50/70">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400">
                 Time
               </span>
             </div>
@@ -128,29 +128,33 @@ export function PlannerCalendar({
                 <div
                   key={day.toISOString()}
                   className={cn(
-                    "flex h-[62px] items-center justify-center gap-2 border-r border-slate-200 px-3 last:border-r-0",
-                    today && "bg-indigo-50/65"
+                    "flex h-[60px] items-center justify-center gap-2 border-r border-slate-200/80 px-2.5 last:border-r-0",
+                    today && "bg-indigo-50/55"
                   )}
                 >
-                  <span
-                    className={cn(
-                      "text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400",
-                      today && "text-indigo-600"
-                    )}
-                  >
-                    {format(day, "EEE")}
-                  </span>
-                  <span
-                    className={cn(
-                      "inline-flex h-8 min-w-8 items-center justify-center rounded-[10px] px-1 text-[13px] font-semibold text-slate-800",
-                      today && "bg-indigo-600 text-white shadow-sm"
-                    )}
-                  >
-                    {format(day, "d")}
-                  </span>
-                  <span className="text-[10px] font-medium text-slate-400">
-                    {dayEvents.length} {dayEvents.length === 1 ? "item" : "items"}
-                  </span>
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span
+                      className={cn(
+                        "text-[9.5px] font-semibold uppercase tracking-[0.12em] text-slate-400",
+                        today && "text-indigo-600"
+                      )}
+                    >
+                      {format(day, "EEE")}
+                    </span>
+                    <span
+                      className={cn(
+                        "inline-flex h-8 min-w-8 items-center justify-center rounded-[10px] px-1 text-[13px] font-semibold text-slate-800",
+                        today && "bg-slate-950 text-white shadow-sm"
+                      )}
+                    >
+                      {format(day, "d")}
+                    </span>
+                  </div>
+                  {dayEvents.length ? (
+                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold text-slate-500">
+                      {dayEvents.length}
+                    </span>
+                  ) : null}
                 </div>
               );
             })}
@@ -189,16 +193,16 @@ export function PlannerCalendar({
 function TimeColumn() {
   return (
     <div
-      className="relative border-r border-slate-200 bg-slate-50/55"
+      className="relative border-r border-slate-200/80 bg-slate-50/45"
       style={{ height: GRID_HEIGHT_PX }}
     >
       {timeSlots.map((slot, index) => (
         <div
           key={slot.hour}
-          className="absolute inset-x-0 border-t border-slate-200/90 pr-3 text-right"
+          className="absolute inset-x-0 border-t border-slate-200/80 pr-2.5 text-right"
           style={{ top: index * HOUR_HEIGHT_PX }}
         >
-          <span className="relative -top-2 bg-slate-50 px-1 text-[9.5px] font-medium text-slate-400">
+          <span className="relative -top-2 bg-slate-50 px-1 text-[9px] font-medium text-slate-400">
             {slot.label}
           </span>
         </div>
@@ -224,31 +228,49 @@ function CalendarDay({
     id: `calendar-day-${day.toISOString()}`,
     data: { day },
   });
-  const positionedEvents = layoutDayEvents(events.filter((event) => isInGridRange(event.startDateTime)));
-  const showNow = isToday(day) && now.getHours() >= HOURS_START && now.getHours() < HOURS_END;
+  const positionedEvents = layoutDayEvents(
+    events.filter((event) => isInGridRange(event.startDateTime))
+  );
+  const showNow =
+    isToday(day) && now.getHours() >= HOURS_START && now.getHours() < HOURS_END;
 
   return (
     <div
       ref={setNodeRef}
       className={cn(
-        "relative border-r border-slate-200/80 bg-white last:border-r-0",
-        isToday(day) && "bg-indigo-50/[0.16]",
-        isOver && "bg-indigo-50/70"
+        "relative border-r border-slate-200/70 bg-white last:border-r-0",
+        isToday(day) && "bg-indigo-50/[0.10]",
+        isOver && "bg-indigo-50/60"
       )}
       style={{ height: GRID_HEIGHT_PX }}
     >
-      {timeSlots.map((slot, index) => (
-        <button
-          key={slot.hour}
-          type="button"
-          onClick={() => onSlotClick(day, slot.hour, 0)}
-          aria-label={`Add schedule on ${format(day, "EEEE, MMMM d")} at ${slot.label}`}
-          className="absolute inset-x-0 border-t border-slate-200/80 outline-none transition hover:bg-indigo-50/45 focus-visible:z-20 focus-visible:bg-indigo-50/70 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400"
-          style={{ top: index * HOUR_HEIGHT_PX, height: HOUR_HEIGHT_PX }}
-        >
-          <span className="sr-only">Add schedule</span>
-        </button>
-      ))}
+      {timeSlots.map((slot, index) => {
+        const top = index * HOUR_HEIGHT_PX;
+        const halfHour = HOUR_HEIGHT_PX / 2;
+
+        return (
+          <div key={slot.hour}>
+            <button
+              type="button"
+              onClick={() => onSlotClick(day, slot.hour, 0)}
+              aria-label={`Add schedule on ${format(day, "EEEE, MMMM d")} at ${slot.label}`}
+              className="absolute inset-x-0 border-t border-slate-200/75 outline-none transition hover:bg-indigo-50/35 focus-visible:z-20 focus-visible:bg-indigo-50/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400"
+              style={{ top, height: halfHour }}
+            >
+              <span className="sr-only">Add schedule</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onSlotClick(day, slot.hour, 30)}
+              aria-label={`Add schedule on ${format(day, "EEEE, MMMM d")} at half past ${slot.label}`}
+              className="absolute inset-x-0 border-t border-dashed border-slate-100 outline-none transition hover:bg-indigo-50/30 focus-visible:z-20 focus-visible:bg-indigo-50/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400"
+              style={{ top: top + halfHour, height: halfHour }}
+            >
+              <span className="sr-only">Add schedule at half hour</span>
+            </button>
+          </div>
+        );
+      })}
 
       {showNow ? (
         <div
@@ -256,14 +278,17 @@ function CalendarDay({
           style={{ top: getCurrentTimeTopPx(now) }}
           aria-hidden="true"
         >
-          <span className="-ml-1.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
+          <span className="-ml-1 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
           <span className="h-px flex-1 bg-rose-500" />
         </div>
       ) : null}
 
       {positionedEvents.map(({ event, colIndex, totalCols }) => {
         const top = Math.max(getEventTopPx(event.startDateTime), 0);
-        const height = Math.min(getEventHeightPx(event.startDateTime, event.endDateTime), GRID_HEIGHT_PX - top);
+        const height = Math.min(
+          getEventHeightPx(event.startDateTime, event.endDateTime),
+          GRID_HEIGHT_PX - top
+        );
         const width = 100 / totalCols;
 
         return (
@@ -319,7 +344,7 @@ function DraggableEvent({
         opacity: isDragging ? 0.25 : 1,
       }}
     >
-      <span className="pointer-events-none absolute right-1 top-1 z-10 hidden rounded bg-white/60 p-0.5 text-slate-400 group-hover:block">
+      <span className="pointer-events-none absolute right-1 top-1 z-10 hidden rounded-md bg-white/80 p-0.5 text-slate-400 shadow-sm group-hover:block">
         <GripVertical className="h-3 w-3" />
       </span>
       <PlannerEventCard event={event} height={height} onClick={onClick} />
