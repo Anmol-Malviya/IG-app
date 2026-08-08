@@ -37,7 +37,6 @@ export default function DashboardLayout({
   // Determine current active section name for header
   const getHeaderTitle = () => {
     if (pathname === "/dashboard") return "Dashboard Workspace";
-    if (pathname.includes("/services/weekly-schedule")) return "Weekly Schedule";
     if (pathname.includes("/services/reminders")) return "Reminders";
     if (pathname.includes("/services/assignments")) return "Assignments Tracker";
     if (pathname.includes("/services/notes")) return "Lecture Notes";
@@ -54,12 +53,6 @@ export default function DashboardLayout({
 
   const isDashboardActive = pathname === "/dashboard";
   const isServicesActive = pathname.startsWith("/services");
-  const isWeeklySchedule = pathname.startsWith("/services/weekly-schedule");
-
-  // For weekly scheduler page with its own integrated sidebar & header layout
-  if (isWeeklySchedule) {
-    return <div className="w-full min-h-screen">{children}</div>;
-  }
 
   return (
     <div className="dashboard-layout">
