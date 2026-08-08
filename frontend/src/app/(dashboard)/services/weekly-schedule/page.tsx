@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -48,15 +48,19 @@ export default function WeeklySchedulePage() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+  const [currentDay, setCurrentDay] = useState<Day | null>(null);
 
-  const currentDay = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date()) as Day;
+  useEffect(() => {
+    const value = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date()) as Day;
+    if (DAYS.includes(value)) setCurrentDay(value);
+  }, []);
 
   const sortedSchedule = useMemo(
     () => [...schedule].sort((a, b) => a.startTime.localeCompare(b.startTime)),
     [schedule]
   );
 
-  const todayItems = schedule.filter((item) => item.day === currentDay).length;
+  const todayItems = currentDay ? schedule.filter((item) => item.day === currentDay).length : 0;
   const subjects = new Set(schedule.map((item) => item.subject)).size;
 
   const handleAdd = (event: React.FormEvent) => {
@@ -191,9 +195,11 @@ export default function WeeklySchedulePage() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Week overview</p>
             <h3 className="mt-1 text-xl font-extrabold tracking-[-0.025em] text-slate-950">Monday to Sunday</h3>
           </div>
-          <span className="hidden rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700 sm:inline-flex">
-            {currentDay} is highlighted
-          </span>
+          {currentDay && (
+            <span className="hidden rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-700 sm:inline-flex">
+              {currentDay} is highlighted
+            </span>
+          )}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
