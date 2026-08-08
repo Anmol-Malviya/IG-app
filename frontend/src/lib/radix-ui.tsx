@@ -14,15 +14,17 @@ import React, {
   useState,
 } from "react";
 
-type ChildWithClick = ReactElement<{
+type ChildWithClickProps = {
   onClick?: MouseEventHandler<HTMLElement>;
   "aria-expanded"?: boolean;
-}>;
+};
+
+type ChildWithClick = ReactElement<ChildWithClickProps>;
 
 function withClick(
   child: ReactNode,
   handler: MouseEventHandler<HTMLElement>,
-  extra?: Record<string, unknown>
+  extra?: Partial<ChildWithClickProps>
 ) {
   if (!isValidElement(child)) return child;
   const element = child as ChildWithClick;
@@ -129,7 +131,7 @@ function AlertRoot({ children }: { children: ReactNode }) {
 function AlertTrigger({ asChild, children }: { asChild?: boolean; children: ReactNode }) {
   const context = useContext(AlertContext);
   if (asChild) return withClick(children, () => context?.setOpen(true)) as ReactElement;
-  return <button onClick={() => context?.setOpen(true)}>{children}</button>;
+  return <button type="button" onClick={() => context?.setOpen(true)}>{children}</button>;
 }
 
 function AlertPortal({ children }: { children: ReactNode }) {
@@ -159,13 +161,13 @@ function AlertDescription(props: HTMLAttributes<HTMLParagraphElement>) {
 function AlertCancel({ asChild, children }: { asChild?: boolean; children: ReactNode }) {
   const context = useContext(AlertContext);
   if (asChild) return withClick(children, () => context?.setOpen(false)) as ReactElement;
-  return <button onClick={() => context?.setOpen(false)}>{children}</button>;
+  return <button type="button" onClick={() => context?.setOpen(false)}>{children}</button>;
 }
 
 function AlertAction({ asChild, children }: { asChild?: boolean; children: ReactNode }) {
   const context = useContext(AlertContext);
   if (asChild) return withClick(children, () => context?.setOpen(false)) as ReactElement;
-  return <button onClick={() => context?.setOpen(false)}>{children}</button>;
+  return <button type="button" onClick={() => context?.setOpen(false)}>{children}</button>;
 }
 
 const PopoverContext = createContext<OpenContextValue | null>(null);
@@ -174,7 +176,7 @@ function PopoverRoot({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <PopoverContext.Provider value={{ open, setOpen }}>
-      <span className="relative inline-flex">{children}</span>
+      <div className="relative inline-flex">{children}</div>
     </PopoverContext.Provider>
   );
 }
@@ -188,7 +190,7 @@ function PopoverTrigger({ asChild, children }: { asChild?: boolean; children: Re
       { "aria-expanded": context?.open ?? false }
     ) as ReactElement;
   }
-  return <button onClick={() => context?.setOpen(!context.open)}>{children}</button>;
+  return <button type="button" onClick={() => context?.setOpen(!context.open)}>{children}</button>;
 }
 
 function PopoverPortal({ children }: { children: ReactNode }) {
@@ -279,6 +281,7 @@ function TabsList(props: HTMLAttributes<HTMLDivElement>) {
 function TabsTrigger({
   value,
   children,
+  onClick,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { value: string }) {
   const context = useContext(TabsContext);
@@ -289,7 +292,10 @@ function TabsTrigger({
       role="tab"
       aria-selected={active}
       data-state={active ? "active" : "inactive"}
-      onClick={() => context?.setValue(value)}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) context?.setValue(value);
+      }}
       {...props}
     >
       {children}
