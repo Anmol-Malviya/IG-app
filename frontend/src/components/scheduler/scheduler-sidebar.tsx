@@ -81,7 +81,7 @@ export function SchedulerSidebar({
   return (
     <aside
       className={`bg-white border-r border-slate-200 flex flex-col justify-between p-4 flex-shrink-0 transition-all duration-200 select-none ${
-        collapsed ? "w-[68px]" : "w-[236px]"
+        collapsed ? "w-[68px]" : "w-[68px] xl:w-[236px]"
       }`}
     >
       <div>
@@ -92,7 +92,7 @@ export function SchedulerSidebar({
               <Calendar className="w-5 h-5 text-white" />
             </div>
             {!collapsed && (
-              <span className="font-extrabold text-[15px] text-slate-900 tracking-tight truncate">
+              <span className="hidden xl:block font-extrabold text-[15px] text-slate-900 tracking-tight truncate">
                 IG Scheduler
               </span>
             )}
@@ -101,8 +101,9 @@ export function SchedulerSidebar({
           <button
             type="button"
             onClick={onToggleCollapse}
-            className="w-7 h-7 rounded-[8px] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="hidden xl:flex w-7 h-7 rounded-[8px] items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
               <ChevronRight className="w-4 h-4" />
@@ -120,8 +121,9 @@ export function SchedulerSidebar({
               <Link
                 key={item.label}
                 href={item.href}
-                title={collapsed ? item.label : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all ${
+                title={item.label}
+                aria-label={item.label}
+                className={`flex items-center justify-center ${collapsed ? "" : "xl:justify-start"} gap-3 px-3 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all ${
                   item.active
                     ? "bg-[#EEF2FF] text-[#4F46E5]"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
@@ -132,7 +134,9 @@ export function SchedulerSidebar({
                     item.active ? "text-[#4F46E5]" : "text-slate-400"
                   }`}
                 />
-                {!collapsed && <span className="truncate">{item.label}</span>}
+                {!collapsed && (
+                  <span className="hidden xl:block truncate">{item.label}</span>
+                )}
               </Link>
             );
           })}
@@ -143,7 +147,7 @@ export function SchedulerSidebar({
       {!collapsed ? (
         <Link
           href="/services/study-planner"
-          className="flex items-center justify-between p-3 rounded-[10px] bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 text-slate-800 transition-all cursor-pointer group"
+          className="hidden xl:flex items-center justify-between p-3 rounded-[10px] bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 text-slate-800 transition-all cursor-pointer group"
         >
           <div className="flex items-center gap-2.5">
             <Target className="w-4 h-4 text-[#4F46E5]" />
@@ -153,15 +157,16 @@ export function SchedulerSidebar({
           </div>
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#4F46E5]" />
         </Link>
-      ) : (
-        <Link
-          href="/services/study-planner"
-          title="Focus Mode"
-          className="w-10 h-10 mx-auto rounded-[10px] bg-slate-50 hover:bg-indigo-50 border border-slate-200 flex items-center justify-center text-[#4F46E5] transition-colors"
-        >
-          <Target className="w-4 h-4" />
-        </Link>
-      )}
+      ) : null}
+
+      <Link
+        href="/services/study-planner"
+        title="Focus Mode"
+        aria-label="Focus Mode"
+        className={`${collapsed ? "flex" : "flex xl:hidden"} w-10 h-10 mx-auto rounded-[10px] bg-slate-50 hover:bg-indigo-50 border border-slate-200 items-center justify-center text-[#4F46E5] transition-colors`}
+      >
+        <Target className="w-4 h-4" />
+      </Link>
     </aside>
   );
 }

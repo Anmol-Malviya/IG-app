@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
+import Link from "next/link";
 import { Search, Bell, X } from "lucide-react";
 
 
@@ -39,9 +40,9 @@ export function SchedulerHeader({
     : "A";
 
   return (
-    <header className="h-15 px-6 bg-white border-b border-slate-200 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-15 shrink-0 px-4 xl:px-6 bg-white border-b border-slate-200 flex items-center justify-between gap-4 z-30">
       {/* Search Bar */}
-      <div className="relative w-80 max-w-sm">
+      <div className="relative w-64 xl:w-80 max-w-sm">
         <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
           <Search className="w-4 h-4" />
         </span>
@@ -58,6 +59,7 @@ export function SchedulerHeader({
             type="button"
             onClick={() => onSearchChange("")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded"
+            aria-label="Clear schedule search"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -70,13 +72,14 @@ export function SchedulerHeader({
 
       {/* Right Controls */}
       <div className="flex items-center gap-3">
-        <button
-          type="button"
+        <Link
+          href="/services/reminders"
           className="w-9 h-9 rounded-[10px] border border-slate-200/80 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors"
           title="Notifications"
+          aria-label="Open reminders"
         >
           <Bell className="w-4 h-4" />
-        </button>
+        </Link>
 
         <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
           <div className="w-8 h-8 rounded-full bg-[#4F46E5] text-white flex items-center justify-center text-[12px] font-bold shadow-xs">

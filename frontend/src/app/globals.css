@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
+  --background: #f7f8fc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --primary: #4338ca;
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
   --secondary: #f1f5f9;
   --secondary-foreground: #0f172a;
@@ -491,29 +491,44 @@ body {
   gap: 1rem;
 }
 
-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--foreground);
-  opacity: 0.9;
+@layer components {
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+    opacity: 0.9;
+  }
+
+  input {
+    background-color: rgba(9, 9, 11, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--foreground);
+    font-size: 0.875rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+  }
+
+  input:focus {
+    border-color: var(--primary);
+    background-color: rgba(9, 9, 11, 0.85);
+    box-shadow: 0 0 0 1px var(--primary),
+                0 0 20px rgba(99, 102, 241, 0.15);
+  }
 }
 
-input {
-  background-color: rgba(9, 9, 11, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  color: var(--foreground);
-  font-size: 0.875rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  outline: none;
+.scrollbar-none {
+  scrollbar-width: none;
 }
 
-input:focus {
-  border-color: var(--primary);
-  background-color: rgba(9, 9, 11, 0.85);
-  box-shadow: 0 0 0 1px var(--primary),
-              0 0 20px rgba(99, 102, 241, 0.15);
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+[data-scheduler] :is(button, a, input, select):focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
 }
 
 .auth-footer {
@@ -1845,5 +1860,4 @@ input:focus {
 .overview-value.remaining {
   color: rgb(34, 197, 94);
 }
-
 

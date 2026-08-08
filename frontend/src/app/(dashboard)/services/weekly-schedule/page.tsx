@@ -51,6 +51,7 @@ export default function WeeklySchedulePage() {
   const [filters, setFilters] = useState<SchedulerFilterState>({
     category: "all",
     status: "all",
+    day: "all",
     hideCompleted: false,
   });
 
@@ -79,6 +80,14 @@ export default function WeeklySchedulePage() {
     };
   }, [currentDate]);
 
+  const scheduleFilters = useMemo(
+    () => ({
+      startDate: weekBounds.startDate,
+      endDate: weekBounds.endDate,
+    }),
+    [weekBounds]
+  );
+
   const {
     schedules,
     isLoading,
@@ -90,10 +99,7 @@ export default function WeeklySchedulePage() {
     updateStatus,
     undoDelete,
     fetchSchedules,
-  } = useSchedules({
-    startDate: weekBounds.startDate,
-    endDate: weekBounds.endDate,
-  });
+  } = useSchedules(scheduleFilters);
 
   const weekDays = useMemo(() => getWeekDays(currentDate), [currentDate]);
 
@@ -132,6 +138,11 @@ export default function WeeklySchedulePage() {
     // Status filter
     if (filters.status !== "all") {
       list = list.filter((e) => e.status === filters.status);
+    }
+
+    // Weekday filter (0 = Sunday, 1 = Monday)
+    if (filters.day !== "all") {
+      list = list.filter((e) => parseISO(e.startDateTime).getDay() === filters.day);
     }
 
     // Hide completed filter
@@ -173,6 +184,7 @@ export default function WeeklySchedulePage() {
       countActiveFilters({
         category: filters.category,
         status: filters.status,
+        day: filters.day,
         hideCompleted: filters.hideCompleted,
       }),
     [filters]
@@ -356,7 +368,12 @@ export default function WeeklySchedulePage() {
         <SchedulerEmptyState
           type="no-filter-results"
           onResetFilters={() =>
-            setFilters({ category: "all", status: "all", hideCompleted: false })
+            setFilters({
+              category: "all",
+              status: "all",
+              day: "all",
+              hideCompleted: false,
+            })
           }
         />
       );
@@ -427,9 +444,9 @@ export default function WeeklySchedulePage() {
         user={user}
       >
         {/* Page Greeting & Dynamic Date */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="shrink-0 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-[22px] xl:text-2xl font-extrabold text-slate-900 tracking-tight">
               Good {getGreetingTime()}, {user?.firstName || "Student"} 👋
             </h1>
             <p className="text-[13px] text-slate-500 mt-0.5 font-medium">
@@ -464,7 +481,9 @@ export default function WeeklySchedulePage() {
         />
 
         {/* Active Scheduler View Area */}
-        {renderActiveView()}
+        <section className="min-h-0 flex-1" aria-live="polite">
+          {renderActiveView()}
+        </section>
       </SchedulerShell>
 
       {/* ══════════════════════════════════════════════════════════════
@@ -474,6 +493,9 @@ export default function WeeklySchedulePage() {
         weekDays={weekDays}
         selectedDay={selectedDay}
         onSelectDay={setSelectedDay}
+        onPrevWeek={goPrevWeek}
+        onNextWeek={goNextWeek}
+        onToday={goToToday}
         dayEvents={selectedDayEvents}
         allEvents={rawEvents}
         onEventClick={(ev) => setDetailEvent(ev)}

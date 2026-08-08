@@ -8,6 +8,7 @@ import { Filter } from "lucide-react";
 export interface SchedulerFilterState {
   category: EventCategory | "all";
   status: ScheduleStatus | "all";
+  day: number | "all";
   hideCompleted: boolean;
 }
 
@@ -40,6 +41,15 @@ export function SchedulerFilters({
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen]);
+
   const categories: Array<{ id: EventCategory | "all"; label: string }> = [
     { id: "all", label: "All Categories" },
     { id: "class", label: "Class" },
@@ -54,12 +64,25 @@ export function SchedulerFilters({
     { id: "all", label: "All Status" },
     { id: "scheduled", label: "Scheduled" },
     { id: "completed", label: "Completed" },
+    { id: "cancelled", label: "Cancelled" },
+  ];
+
+  const days: Array<{ id: number | "all"; label: string }> = [
+    { id: "all", label: "All" },
+    { id: 1, label: "Mon" },
+    { id: 2, label: "Tue" },
+    { id: 3, label: "Wed" },
+    { id: 4, label: "Thu" },
+    { id: 5, label: "Fri" },
+    { id: 6, label: "Sat" },
+    { id: 0, label: "Sun" },
   ];
 
   const handleClear = () => {
     onChange({
       category: "all",
       status: "all",
+      day: "all",
       hideCompleted: false,
     });
   };
@@ -69,6 +92,8 @@ export function SchedulerFilters({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
         className={`h-9 px-3 rounded-[10px] border text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer select-none ${
           activeCount > 0
             ? "border-indigo-300 bg-indigo-50 text-[#4F46E5]"
@@ -85,7 +110,11 @@ export function SchedulerFilters({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 bg-white rounded-[14px] border border-slate-200 shadow-xl p-4 z-40 animate-fadeIn space-y-4">
+        <div
+          className="absolute right-0 mt-2 w-72 bg-white rounded-[14px] border border-slate-200 shadow-xl p-4 z-40 animate-fadeIn space-y-4"
+          role="dialog"
+          aria-label="Schedule filters"
+        >
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <span className="text-[13px] font-bold text-slate-900">Filter Events</span>
             {activeCount > 0 && (
@@ -145,6 +174,32 @@ export function SchedulerFilters({
                     }`}
                   >
                     {st.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Day Filter */}
+          <div>
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
+              Day
+            </label>
+            <div className="grid grid-cols-4 gap-1.5">
+              {days.map((day) => {
+                const isSelected = filters.day === day.id;
+                return (
+                  <button
+                    key={day.id}
+                    type="button"
+                    onClick={() => onChange({ ...filters, day: day.id })}
+                    className={`py-1 rounded-[8px] text-[11px] font-semibold transition-all ${
+                      isSelected
+                        ? "bg-[#4F46E5] text-white shadow-xs"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                  >
+                    {day.label}
                   </button>
                 );
               })}

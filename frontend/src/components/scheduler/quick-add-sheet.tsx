@@ -113,24 +113,33 @@ export function QuickAddSheet({
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div
+      data-scheduler
+      className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center sm:p-4"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
       <div
-        className="bg-white rounded-[16px] p-6 max-w-md w-full shadow-2xl border border-slate-200 animate-fadeIn"
+        className="max-h-[92dvh] overflow-y-auto bg-white rounded-t-[22px] sm:rounded-[16px] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:p-6 max-w-md w-full shadow-2xl border border-slate-200 animate-fadeIn"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="quick-add-title"
       >
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-200 sm:hidden" />
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-[8px] bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
               <Plus className="w-4 h-4" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Add Schedule Event</h3>
+            <h3 id="quick-add-title" className="text-base font-bold text-slate-900">Add Schedule Event</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="w-8 h-8 rounded-[8px] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             title="Close"
+            aria-label="Close add event form"
           >
             <X className="w-4 h-4" />
           </button>
@@ -145,11 +154,13 @@ export function QuickAddSheet({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+            <label htmlFor="quick-add-title-input" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
               Title / Subject *
             </label>
             <input
               type="text"
+              id="quick-add-title-input"
+              autoFocus
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -201,7 +212,7 @@ export function QuickAddSheet({
           </div>
 
           {/* Start & End Time */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
                 Start Time
@@ -229,7 +240,7 @@ export function QuickAddSheet({
           </div>
 
           {/* Location & Faculty (Optional) */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
                 Location (Optional)
@@ -257,18 +268,18 @@ export function QuickAddSheet({
           </div>
 
           {/* Submit */}
-          <div className="pt-2 flex items-center justify-end gap-2.5">
+          <div className="pt-2 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-[10px] border border-slate-200 text-[12.5px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+              className="min-h-11 px-4 py-2.5 rounded-[10px] border border-slate-200 text-[12.5px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-[10px] text-[12.5px] font-bold shadow-xs transition-all disabled:opacity-50"
+              className="min-h-11 px-5 py-2.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-[10px] text-[12.5px] font-bold shadow-xs transition-all disabled:opacity-50"
             >
               {isSubmitting ? "Adding..." : "Add Event"}
             </button>

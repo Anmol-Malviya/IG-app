@@ -21,10 +21,12 @@ export function useSchedulerView() {
 
   const goNextWeek = useCallback(() => {
     setCurrentDate((d) => nextWeek(d));
+    setSelectedDay((d) => nextWeek(d));
   }, []);
 
   const goPrevWeek = useCallback(() => {
     setCurrentDate((d) => prevWeek(d));
+    setSelectedDay((d) => prevWeek(d));
   }, []);
 
   const selectDay = useCallback((date: Date) => {

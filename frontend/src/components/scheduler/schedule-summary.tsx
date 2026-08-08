@@ -9,22 +9,24 @@ import {
   calculatePendingCount,
 } from "@/lib/scheduler-helpers";
 import { BookOpen, Clock, GraduationCap, ClipboardList } from "lucide-react";
+import { useCurrentMinute } from "@/hooks/use-current-minute";
 
 interface ScheduleSummaryProps {
   events: Schedule[];
 }
 
 export function ScheduleSummary({ events }: ScheduleSummaryProps) {
-  const { count: todayClasses, active: activeClasses } = calculateTodayClasses(events);
-  const { formattedDuration, progressPercent } = calculateStudyDuration(events);
+  const now = useCurrentMinute();
+  const { count: todayClasses, active: activeClasses } = calculateTodayClasses(events, now);
+  const { formattedDuration, progressPercent } = calculateStudyDuration(events, 240, now);
   const { event: nextEvent, countdown: nextCountdown, timeRange: nextTimeRange } =
-    findNextUpcomingEvent(events);
-  const { total: pendingTotal, assignments, exams } = calculatePendingCount(events);
+    findNextUpcomingEvent(events, now);
+  const { total: pendingTotal, assignments, exams } = calculatePendingCount(events, now);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 xl:gap-4">
       {/* ── Card 1: Today's Classes ── */}
-      <div className="bg-white rounded-[14px] p-4 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3.5 hover:border-indigo-200 transition-all min-h-[92px]">
+      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-indigo-200 transition-all min-h-[86px]">
         <div className="w-10 h-10 rounded-[10px] bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center flex-shrink-0">
           <BookOpen className="w-5 h-5 text-[#4F46E5]" />
         </div>
@@ -44,7 +46,7 @@ export function ScheduleSummary({ events }: ScheduleSummaryProps) {
       </div>
 
       {/* ── Card 2: Study Hours ── */}
-      <div className="bg-white rounded-[14px] p-4 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3.5 hover:border-emerald-200 transition-all min-h-[92px]">
+      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-emerald-200 transition-all min-h-[86px]">
         <div className="w-10 h-10 rounded-[10px] bg-[#ECFDF5] text-[#059669] flex items-center justify-center flex-shrink-0">
           <Clock className="w-5 h-5 text-[#059669]" />
         </div>
@@ -70,7 +72,7 @@ export function ScheduleSummary({ events }: ScheduleSummaryProps) {
       </div>
 
       {/* ── Card 3: Next Event ── */}
-      <div className="bg-white rounded-[14px] p-4 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3.5 hover:border-purple-200 transition-all min-h-[92px]">
+      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-purple-200 transition-all min-h-[86px]">
         <div className="w-10 h-10 rounded-[10px] bg-[#FAF5FF] text-[#7C3AED] flex items-center justify-center flex-shrink-0">
           <GraduationCap className="w-5 h-5 text-[#7C3AED]" />
         </div>
@@ -88,7 +90,7 @@ export function ScheduleSummary({ events }: ScheduleSummaryProps) {
       </div>
 
       {/* ── Card 4: Pending Tasks ── */}
-      <div className="bg-white rounded-[14px] p-4 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3.5 hover:border-amber-200 transition-all min-h-[92px]">
+      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-amber-200 transition-all min-h-[86px]">
         <div className="w-10 h-10 rounded-[10px] bg-[#FFFBEB] text-[#D97706] flex items-center justify-center flex-shrink-0">
           <ClipboardList className="w-5 h-5 text-[#D97706]" />
         </div>

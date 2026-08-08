@@ -50,12 +50,20 @@ export function EventDetailsSheet({
   const isCompleted = event.status === "completed";
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div
+      data-scheduler
+      className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center sm:p-4"
+      onMouseDown={(mouseEvent) => {
+        if (mouseEvent.target === mouseEvent.currentTarget) onClose();
+      }}
+    >
       <div
-        className="bg-white rounded-[16px] p-6 max-w-md w-full shadow-2xl border border-slate-200 animate-fadeIn"
+        className="max-h-[92dvh] overflow-y-auto bg-white rounded-t-[22px] sm:rounded-[16px] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:p-6 max-w-md w-full shadow-2xl border border-slate-200 animate-fadeIn"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="event-details-title"
       >
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-200 sm:hidden" />
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="min-w-0 flex-1">
@@ -67,6 +75,7 @@ export function EventDetailsSheet({
             </span>
 
             <h3
+              id="event-details-title"
               className={`text-lg font-bold text-slate-900 mt-2 truncate ${
                 isCompleted ? "line-through text-slate-400" : ""
               }`}
@@ -80,6 +89,7 @@ export function EventDetailsSheet({
             onClick={onClose}
             className="w-8 h-8 rounded-[8px] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             title="Close"
+            aria-label="Close event details"
           >
             <X className="w-4 h-4" />
           </button>

@@ -81,13 +81,22 @@ export function ScheduleEventCard({
         e.stopPropagation();
         onClick?.();
       }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick?.();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`${event.title}, ${timeFormatted}${event.location ? `, ${event.location}` : ""}`}
       title={`${event.title} (${timeFormatted})${event.location ? ` • ${event.location}` : ""}`}
       style={{
         ...style,
         ...transformStyle,
-        backgroundColor: catStyle.bgClass.includes("#") ? undefined : undefined,
       }}
-      className={`group select-none rounded-[10px] p-2 sm:p-2.5 transition-all duration-150 cursor-pointer overflow-hidden flex flex-col justify-start border border-slate-200/80 shadow-[0_1px_3px_rgba(15,23,42,0.04)] hover:shadow-md hover:scale-[1.01] hover:border-slate-300 ${
+      className={`group relative select-none rounded-[10px] p-2 sm:p-2.5 transition-all duration-150 cursor-pointer overflow-hidden flex flex-col justify-start border border-white/70 shadow-[0_1px_3px_rgba(15,23,42,0.06)] hover:shadow-md hover:brightness-[0.99] ${catStyle.bgClass} ${
         isCompleted ? "opacity-60 saturate-50" : ""
       } ${isDragging ? "opacity-80 ring-2 ring-indigo-500 shadow-xl z-50 cursor-grabbing" : ""}`}
     >

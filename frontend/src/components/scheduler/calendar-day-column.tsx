@@ -22,6 +22,7 @@ interface CalendarDayColumnProps {
   onEventClick: (event: Schedule) => void;
   onSlotClick: (day: Date, hour: number, minute: number) => void;
   isDraggingAny?: boolean;
+  now?: Date;
 }
 
 export function CalendarDayColumn({
@@ -29,6 +30,7 @@ export function CalendarDayColumn({
   events,
   onEventClick,
   onSlotClick,
+  now = new Date(),
 }: CalendarDayColumnProps) {
   const dayKey = format(day, "yyyy-MM-dd");
   const isCurrentDay = isToday(day);
@@ -40,7 +42,7 @@ export function CalendarDayColumn({
   });
 
   const positionedEvents = layoutDayEvents(events);
-  const currentTimeTop = isCurrentDay ? getCurrentTimeTopPx() : -1;
+  const currentTimeTop = isCurrentDay ? getCurrentTimeTopPx(now) : -1;
   const gridHeight = TOTAL_HOURS * HOUR_HEIGHT_PX;
 
   return (
