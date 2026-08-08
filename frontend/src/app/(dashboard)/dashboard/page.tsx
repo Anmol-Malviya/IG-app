@@ -55,12 +55,6 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const firstName = user?.firstName || "Student";
 
-  const today = new Intl.DateTimeFormat("en-IN", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(new Date());
-
   return (
     <div className="space-y-7 sm:space-y-8">
       <section className="relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-7 text-white shadow-[0_20px_60px_-35px_rgba(15,23,42,0.8)] sm:px-8 sm:py-9 lg:px-10 lg:py-10">
@@ -73,7 +67,7 @@ export default function DashboardPage() {
               <Sparkles size={14} className="text-indigo-300" />
               Focused student workspace
             </div>
-            <p className="mb-2 text-sm font-semibold text-slate-400">{today}</p>
+            <p className="mb-2 text-sm font-semibold text-slate-400">Your focused dashboard</p>
             <h2 className="max-w-xl text-3xl font-black tracking-[-0.045em] sm:text-4xl lg:text-[42px] lg:leading-[1.05]">
               Welcome back, {firstName}.
             </h2>
