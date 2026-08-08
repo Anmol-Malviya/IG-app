@@ -96,28 +96,28 @@ export function ScheduleEventCard({
         ...style,
         ...transformStyle,
       }}
-      className={`group relative select-none rounded-[10px] p-2 sm:p-2.5 transition-all duration-150 cursor-pointer overflow-hidden flex flex-col justify-start border border-white/70 shadow-[0_1px_3px_rgba(15,23,42,0.06)] hover:shadow-md hover:brightness-[0.99] ${catStyle.bgClass} ${
+      className={`group relative flex cursor-pointer select-none flex-col justify-start overflow-hidden rounded-[9px] border border-black/[0.035] p-2.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all duration-150 hover:-translate-y-px hover:brightness-[0.99] hover:shadow-[0_7px_18px_rgba(15,23,42,0.09)] ${catStyle.bgClass} ${
         isCompleted ? "opacity-60 saturate-50" : ""
       } ${isDragging ? "opacity-80 ring-2 ring-indigo-500 shadow-xl z-50 cursor-grabbing" : ""}`}
     >
       {/* 3px category accent on left */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-[3.5px] rounded-l-[10px]"
+        className="absolute bottom-0 left-0 top-0 w-[3px] rounded-l-[9px]"
         style={{ backgroundColor: catStyle.accentColor }}
       />
 
-      <div className="pl-1.5 min-w-0 flex-1 flex flex-col justify-between">
-        <div className="flex items-start justify-between gap-1.5 min-w-0">
+      <div className="flex min-w-0 flex-1 flex-col justify-between pl-1">
+        <div className="flex min-w-0 items-start justify-between gap-1.5">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5 min-w-0">
+            <div className="flex min-w-0 items-center gap-1.5">
               <span
                 className="flex-shrink-0"
                 style={{ color: catStyle.color }}
               >
-                {getCategoryIcon(event.category, "w-3.5 h-3.5")}
+                {getCategoryIcon(event.category, "h-3 w-3")}
               </span>
               <h4
-                className={`font-semibold text-[13px] leading-tight truncate ${
+                className={`truncate text-[12.5px] font-bold leading-[1.15] tracking-[-0.01em] ${
                   isCompleted ? "line-through text-slate-500" : "text-slate-900"
                 }`}
               >
@@ -125,23 +125,20 @@ export function ScheduleEventCard({
               </h4>
             </div>
 
-            {!compact && (
-              <p className="text-[11px] font-medium text-slate-600 mt-1 flex items-center gap-1 truncate leading-tight">
+            <p className="mt-1 flex truncate text-[10.5px] font-semibold leading-tight text-slate-600">
                 <span>{timeFormatted}</span>
-                <span className="text-slate-400">•</span>
-                <span className="text-slate-500">{durationText}</span>
-              </p>
-            )}
+                {!compact ? <span className="ml-1 text-slate-400">· {durationText}</span> : null}
+            </p>
 
             {detailed && event.location && (
-              <p className="text-[11px] font-medium text-slate-500 mt-1 flex items-center gap-1 truncate">
+              <p className="mt-1 flex gap-1 truncate text-[10.5px] font-medium text-slate-500">
                 <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
                 <span className="truncate">{event.location}</span>
               </p>
             )}
 
             {detailed && event.faculty && (
-              <p className="text-[11px] font-medium text-slate-500 mt-0.5 flex items-center gap-1 truncate">
+              <p className="mt-0.5 flex gap-1 truncate text-[10.5px] font-medium text-slate-500">
                 <User className="w-3 h-3 text-slate-400 flex-shrink-0" />
                 <span className="truncate">{event.faculty}</span>
               </p>
@@ -156,7 +153,7 @@ export function ScheduleEventCard({
         </div>
 
         {compact && event.location && (
-          <p className="text-[11px] font-medium text-slate-500 mt-0.5 truncate flex items-center gap-1">
+          <p className="mt-0.5 flex gap-1 truncate text-[10px] font-medium text-slate-500">
             <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
             <span className="truncate">{event.location}</span>
           </p>

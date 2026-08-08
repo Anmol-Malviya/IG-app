@@ -5,7 +5,7 @@ import React from "react";
 export function SchedulerSkeleton() {
   return (
     <div
-      className="h-full min-h-[360px] animate-pulse bg-white rounded-[14px] border border-slate-200 p-4"
+      className="h-full min-h-[360px] animate-pulse bg-white p-4"
       aria-label="Loading schedule"
     >
         <div className="grid grid-cols-8 gap-2 h-full">

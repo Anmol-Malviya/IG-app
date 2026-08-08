@@ -115,13 +115,13 @@ export function QuickAddSheet({
   return (
     <div
       data-scheduler
-      className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 backdrop-blur-sm sm:items-center sm:p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
       <div
-        className="max-h-[92dvh] overflow-y-auto bg-white rounded-t-[22px] sm:rounded-[16px] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:p-6 max-w-md w-full shadow-2xl border border-slate-200 animate-fadeIn"
+        className="animate-fadeIn max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-[24px] border border-slate-200 bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-[0_24px_64px_rgba(15,23,42,0.22)] sm:rounded-[20px] sm:p-6"
         role="dialog"
         aria-modal="true"
         aria-labelledby="quick-add-title"
@@ -129,10 +129,13 @@ export function QuickAddSheet({
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-200 sm:hidden" />
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-[8px] bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-[0_7px_16px_rgba(79,70,229,0.22)]">
               <Plus className="w-4 h-4" />
             </div>
-            <h3 id="quick-add-title" className="text-base font-bold text-slate-900">Add Schedule Event</h3>
+            <div>
+              <h3 id="quick-add-title" className="text-base font-bold tracking-[-0.02em] text-slate-950">Create schedule event</h3>
+              <p className="mt-0.5 text-[10.5px] font-medium text-slate-400">Add the essentials now—you can edit details later.</p>
+            </div>
           </div>
           <button
             type="button"
@@ -165,7 +168,7 @@ export function QuickAddSheet({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Data Structures, Lab Session, Reading..."
-              className="w-full px-3.5 py-2.5 rounded-[10px] border border-slate-200 text-[13px] bg-slate-50/50 text-slate-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4F46E5]/20 focus:border-[#4F46E5] transition-all"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3.5 text-[13px] font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
             />
           </div>
 
@@ -185,7 +188,7 @@ export function QuickAddSheet({
                     onClick={() => setCategory(cat)}
                     className={`py-2 px-2.5 rounded-[10px] border text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 ${
                       isSelected
-                        ? "border-[#4F46E5] bg-[#EEF2FF] text-[#4F46E5] shadow-xs"
+                        ? "border-indigo-200 bg-indigo-50 text-indigo-600 shadow-sm"
                         : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                     }`}
                   >
@@ -279,7 +282,7 @@ export function QuickAddSheet({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="min-h-11 px-5 py-2.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-[10px] text-[12.5px] font-bold shadow-xs transition-all disabled:opacity-50"
+              className="min-h-11 rounded-xl bg-indigo-600 px-5 py-2.5 text-[12.5px] font-bold text-white shadow-[0_7px_16px_rgba(79,70,229,0.22)] transition-all hover:bg-indigo-700 disabled:opacity-50"
             >
               {isSubmitting ? "Adding..." : "Add Event"}
             </button>

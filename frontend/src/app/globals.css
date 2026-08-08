@@ -531,6 +531,44 @@ body {
   outline-offset: 2px;
 }
 
+[data-scheduler] {
+  color-scheme: light;
+  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-width: thin;
+}
+
+[data-scheduler] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-scheduler] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-scheduler] ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+[data-scheduler] ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  background-clip: padding-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scheduler] *,
+  [data-scheduler] *::before,
+  [data-scheduler] *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 .auth-footer {
   text-align: center;
   margin-top: 1.5rem;
@@ -1860,4 +1898,3 @@ body {
 .overview-value.remaining {
   color: rgb(34, 197, 94);
 }
-

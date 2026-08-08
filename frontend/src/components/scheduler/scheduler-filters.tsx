@@ -94,16 +94,16 @@ export function SchedulerFilters({
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
-        className={`h-9 px-3 rounded-[10px] border text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer select-none ${
+        className={`flex h-10 cursor-pointer select-none items-center gap-2 rounded-xl border px-3 text-[11.5px] font-bold transition-colors ${
           activeCount > 0
-            ? "border-indigo-300 bg-indigo-50 text-[#4F46E5]"
-            : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+            ? "border-indigo-200 bg-indigo-50 text-indigo-600"
+            : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
         }`}
       >
         <Filter className="w-3.5 h-3.5" />
         <span>Filters</span>
         {activeCount > 0 && (
-          <span className="w-4.5 h-4.5 rounded-full bg-[#4F46E5] text-white text-[10px] font-extrabold flex items-center justify-center">
+          <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-indigo-600 text-[9.5px] font-bold text-white">
             {activeCount}
           </span>
         )}
@@ -111,7 +111,7 @@ export function SchedulerFilters({
 
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-72 bg-white rounded-[14px] border border-slate-200 shadow-xl p-4 z-40 animate-fadeIn space-y-4"
+          className="animate-fadeIn absolute right-0 z-40 mt-2 w-72 space-y-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_18px_46px_rgba(15,23,42,0.14)]"
           role="dialog"
           aria-label="Schedule filters"
         >
@@ -143,7 +143,7 @@ export function SchedulerFilters({
                     onClick={() => onChange({ ...filters, category: cat.id })}
                     className={`px-2.5 py-1 rounded-[8px] text-[11px] font-semibold transition-all ${
                       isSelected
-                        ? "bg-[#4F46E5] text-white shadow-xs"
+                        ? "bg-indigo-600 text-white shadow-sm"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -169,7 +169,7 @@ export function SchedulerFilters({
                     onClick={() => onChange({ ...filters, status: st.id })}
                     className={`flex-1 py-1 rounded-[8px] text-[11px] font-semibold transition-all ${
                       isSelected
-                        ? "bg-[#4F46E5] text-white shadow-xs"
+                        ? "bg-indigo-600 text-white shadow-sm"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -195,7 +195,7 @@ export function SchedulerFilters({
                     onClick={() => onChange({ ...filters, day: day.id })}
                     className={`py-1 rounded-[8px] text-[11px] font-semibold transition-all ${
                       isSelected
-                        ? "bg-[#4F46E5] text-white shadow-xs"
+                        ? "bg-indigo-600 text-white shadow-sm"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >

@@ -99,11 +99,11 @@ export function DayCalendar({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="h-full min-h-[360px] bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden flex flex-col">
+      <div className="flex h-full min-h-[360px] flex-col overflow-hidden bg-white">
         {/* Day Header Banner */}
-        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 bg-slate-50/60 px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[10px] bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
               <CalendarIcon className="w-5 h-5" />
             </div>
             <div>
@@ -112,7 +112,7 @@ export function DayCalendar({
                   {format(selectedDay, "EEEE, MMMM d, yyyy")}
                 </h3>
                 {isCurrent && (
-                  <span className="bg-[#4F46E5] text-white text-[11px] font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white">
                     Today
                   </span>
                 )}
@@ -123,7 +123,7 @@ export function DayCalendar({
             </div>
           </div>
 
-          <div className="text-[12px] font-semibold text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-[10px] flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-500">
             <Clock className="w-3.5 h-3.5 text-slate-400" />
             <span>7:00 AM – 10:00 PM</span>
           </div>
@@ -134,7 +134,7 @@ export function DayCalendar({
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "72px 1fr",
+              gridTemplateColumns: "68px 1fr",
             }}
             className="relative bg-white"
           >

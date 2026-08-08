@@ -14,7 +14,19 @@ import {
   Target,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
 } from "lucide-react";
+
+const NAV_ITEMS = [
+  { label: "Schedule", href: "/services/weekly-schedule", icon: Calendar },
+  { label: "Overview", href: "/dashboard", icon: BarChart3 },
+  { label: "Assignments", href: "/services/assignments", icon: ClipboardList },
+  { label: "Notes", href: "/services/notes", icon: FileText },
+  { label: "Resources", href: "/services/resources", icon: BookOpen },
+  { label: "Exams", href: "/services/exam-planner", icon: GraduationCap },
+  { label: "Study planner", href: "/services/study-planner", icon: Target },
+  { label: "Tasks", href: "/services/todo-list", icon: CheckSquare },
+] as const;
 
 interface SchedulerSidebarProps {
   collapsed: boolean;
@@ -27,81 +39,36 @@ export function SchedulerSidebar({
 }: SchedulerSidebarProps) {
   const pathname = usePathname();
 
-  const navItems = [
-    {
-      label: "Schedule",
-      href: "/services/weekly-schedule",
-      icon: Calendar,
-      active: pathname.startsWith("/services/weekly-schedule"),
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: BarChart3,
-      active: pathname === "/dashboard",
-    },
-    {
-      label: "Assignments",
-      href: "/services/assignments",
-      icon: ClipboardList,
-      active: pathname.startsWith("/services/assignments"),
-    },
-    {
-      label: "Notes",
-      href: "/services/notes",
-      icon: FileText,
-      active: pathname.startsWith("/services/notes"),
-    },
-    {
-      label: "Courses",
-      href: "/services/resources",
-      icon: BookOpen,
-      active: pathname.startsWith("/services/resources"),
-    },
-    {
-      label: "Exams",
-      href: "/services/exam-planner",
-      icon: GraduationCap,
-      active: pathname.startsWith("/services/exam-planner"),
-    },
-    {
-      label: "Study Planner",
-      href: "/services/study-planner",
-      icon: Target,
-      active: pathname.startsWith("/services/study-planner"),
-    },
-    {
-      label: "Tasks",
-      href: "/services/todo-list",
-      icon: CheckSquare,
-      active: pathname.startsWith("/services/todo-list"),
-    },
-  ];
-
   return (
     <aside
-      className={`bg-white border-r border-slate-200 flex flex-col justify-between p-4 flex-shrink-0 transition-all duration-200 select-none ${
-        collapsed ? "w-[68px]" : "w-[68px] xl:w-[236px]"
+      className={`relative flex flex-shrink-0 select-none flex-col justify-between overflow-hidden border-r border-white/5 bg-[#0d1424] p-3 text-white transition-all duration-300 ${
+        collapsed ? "w-[76px]" : "w-[76px] xl:w-[248px]"
       }`}
     >
+      <div className="pointer-events-none absolute -left-16 top-0 h-52 w-52 rounded-full bg-indigo-500/10 blur-3xl" />
       <div>
         {/* Brand & Collapse Toggle */}
-        <div className="flex items-center justify-between mb-6 px-1">
+        <div className="relative mb-7 flex h-12 items-center justify-between px-1.5">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-[10px] bg-[#4F46E5] text-white flex items-center justify-center shadow-xs flex-shrink-0">
-              <Calendar className="w-5 h-5 text-white" />
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 text-white shadow-[0_8px_24px_rgba(79,70,229,0.35)] ring-1 ring-white/15">
+              <Calendar className="h-[19px] w-[19px]" />
             </div>
             {!collapsed && (
-              <span className="hidden xl:block font-extrabold text-[15px] text-slate-900 tracking-tight truncate">
-                IG Scheduler
-              </span>
+              <div className="hidden min-w-0 xl:block">
+                <span className="block truncate text-[15px] font-bold tracking-[-0.02em] text-white">
+                  IG Workspace
+                </span>
+                <span className="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  Student OS
+                </span>
+              </div>
             )}
           </div>
 
           <button
             type="button"
             onClick={onToggleCollapse}
-            className="hidden xl:flex w-7 h-7 rounded-[8px] items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="hidden h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-white/10 hover:text-white xl:flex"
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
@@ -114,24 +81,33 @@ export function SchedulerSidebar({
         </div>
 
         {/* Navigation Items */}
-        <nav className="space-y-1">
-          {navItems.map((item) => {
+        {!collapsed ? (
+          <p className="mb-2 hidden px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600 xl:block">
+            Workspace
+          </p>
+        ) : null}
+        <nav className="space-y-1.5" aria-label="Student workspace">
+          {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
+            const active =
+              item.href === "/dashboard"
+                ? pathname === "/dashboard"
+                : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.label}
                 href={item.href}
                 title={item.label}
                 aria-label={item.label}
-                className={`flex items-center justify-center ${collapsed ? "" : "xl:justify-start"} gap-3 px-3 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all ${
-                  item.active
-                    ? "bg-[#EEF2FF] text-[#4F46E5]"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                className={`group relative flex min-h-11 items-center justify-center gap-3 rounded-xl px-3 text-[13px] font-semibold transition-all ${collapsed ? "" : "xl:justify-start"} ${
+                  active
+                    ? "bg-indigo-500 text-white shadow-[0_8px_24px_rgba(79,70,229,0.22)]"
+                    : "text-slate-400 hover:bg-white/[0.06] hover:text-white"
                 }`}
               >
                 <Icon
-                  className={`w-4 h-4 flex-shrink-0 ${
-                    item.active ? "text-[#4F46E5]" : "text-slate-400"
+                  className={`h-[18px] w-[18px] flex-shrink-0 transition-colors ${
+                    active ? "text-white" : "text-slate-500 group-hover:text-slate-200"
                   }`}
                 />
                 {!collapsed && (
@@ -147,15 +123,18 @@ export function SchedulerSidebar({
       {!collapsed ? (
         <Link
           href="/services/study-planner"
-          className="hidden xl:flex items-center justify-between p-3 rounded-[10px] bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 text-slate-800 transition-all cursor-pointer group"
+          className="group hidden rounded-2xl border border-white/[0.08] bg-white/[0.05] p-3.5 transition-all hover:border-indigo-400/30 hover:bg-white/[0.08] xl:block"
         >
-          <div className="flex items-center gap-2.5">
-            <Target className="w-4 h-4 text-[#4F46E5]" />
-            <span className="text-[12px] font-bold text-slate-800 group-hover:text-[#4F46E5]">
-              Focus Mode
-            </span>
+          <div className="mb-3 flex items-center justify-between">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-300">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <ChevronRight className="h-4 w-4 text-slate-600 transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-300" />
           </div>
-          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#4F46E5]" />
+          <p className="text-[12px] font-bold text-white">Start a focus session</p>
+          <p className="mt-1 text-[10.5px] leading-relaxed text-slate-500">
+            Block distractions and study with intent.
+          </p>
         </Link>
       ) : null}
 
@@ -163,7 +142,7 @@ export function SchedulerSidebar({
         href="/services/study-planner"
         title="Focus Mode"
         aria-label="Focus Mode"
-        className={`${collapsed ? "flex" : "flex xl:hidden"} w-10 h-10 mx-auto rounded-[10px] bg-slate-50 hover:bg-indigo-50 border border-slate-200 items-center justify-center text-[#4F46E5] transition-colors`}
+        className={`${collapsed ? "flex" : "flex xl:hidden"} mx-auto h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-indigo-300 transition-colors hover:bg-white/10`}
       >
         <Target className="w-4 h-4" />
       </Link>
