@@ -14,7 +14,6 @@ import { authRoutes } from "./modules/auth/auth.routes";
 import { userRoutes } from "./modules/user/user.routes";
 import { tenantRoutes } from "./modules/tenant/tenant.routes";
 import { statsRoutes } from "./modules/stats/stats.routes";
-import { scheduleRoutes } from "./modules/schedule/schedule.routes";
 
 /**
  * Express application setup.
@@ -55,7 +54,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tenants", tenantRoutes);
 app.use("/api/stats", statsRoutes);
-app.use("/api/schedules", scheduleRoutes);
 
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((_req, res) => {
