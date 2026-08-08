@@ -26,7 +26,7 @@ export function SchedulerShell({
   return (
     <div
       data-scheduler
-      className="hidden lg:flex h-screen bg-[#F7F8FC] text-[#0F172A] font-sans antialiased overflow-hidden"
+      className="hidden h-screen overflow-hidden bg-[#f3f5f9] font-sans text-[#111827] antialiased lg:flex"
     >
       {/* Collapsible Left Sidebar */}
       <SchedulerSidebar
@@ -35,7 +35,7 @@ export function SchedulerShell({
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         {/* Top App Bar */}
         <SchedulerHeader
           searchQuery={searchQuery}
@@ -44,7 +44,7 @@ export function SchedulerShell({
         />
 
         {/* Dynamic Page Container: full-width with 24px padding */}
-        <main className="flex-1 min-h-0 overflow-hidden p-4 xl:p-6 flex flex-col gap-4 xl:gap-5 w-full max-w-none">
+        <main className="flex min-h-0 w-full max-w-none flex-1 flex-col gap-4 overflow-hidden p-5 xl:gap-5 xl:p-7 2xl:px-8">
           {children}
         </main>
       </div>

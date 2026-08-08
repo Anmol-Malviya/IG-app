@@ -8,7 +8,13 @@ import {
   findNextUpcomingEvent,
   calculatePendingCount,
 } from "@/lib/scheduler-helpers";
-import { BookOpen, Clock, GraduationCap, ClipboardList } from "lucide-react";
+import {
+  BookOpen,
+  Clock3,
+  ArrowUpRight,
+  ClipboardCheck,
+  TimerReset,
+} from "lucide-react";
 import { useCurrentMinute } from "@/hooks/use-current-minute";
 
 interface ScheduleSummaryProps {
@@ -24,47 +30,50 @@ export function ScheduleSummary({ events }: ScheduleSummaryProps) {
   const { total: pendingTotal, assignments, exams } = calculatePendingCount(events, now);
 
   return (
-    <div className="shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 xl:gap-4">
+    <section
+      className="grid shrink-0 grid-cols-4 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.025)]"
+      aria-label="Schedule overview"
+    >
       {/* ── Card 1: Today's Classes ── */}
-      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-indigo-200 transition-all min-h-[86px]">
-        <div className="w-10 h-10 rounded-[10px] bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center flex-shrink-0">
-          <BookOpen className="w-5 h-5 text-[#4F46E5]" />
+      <div className="flex min-h-[92px] items-center gap-3 border-r border-slate-100 px-4 py-3.5 xl:px-5">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100/80">
+          <BookOpen className="h-[18px] w-[18px]" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-            Today&apos;s Classes
+          <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">
+            Classes today
           </p>
-          <div className="flex items-baseline gap-2 mt-0.5">
-            <h3 className="text-xl font-extrabold text-slate-900 leading-none">
+          <div className="mt-1 flex items-end gap-2">
+            <h3 className="text-[22px] font-bold leading-none tracking-[-0.04em] text-slate-950">
               {todayClasses}
             </h3>
-            <span className="text-[11px] font-medium text-slate-500 truncate">
-              {activeClasses} active
+            <span className="truncate pb-0.5 text-[10.5px] font-semibold text-slate-400">
+              {activeClasses > 0 ? `${activeClasses} active now` : "nothing active"}
             </span>
           </div>
         </div>
       </div>
 
       {/* ── Card 2: Study Hours ── */}
-      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-emerald-200 transition-all min-h-[86px]">
-        <div className="w-10 h-10 rounded-[10px] bg-[#ECFDF5] text-[#059669] flex items-center justify-center flex-shrink-0">
-          <Clock className="w-5 h-5 text-[#059669]" />
+      <div className="flex min-h-[92px] items-center gap-3 border-r border-slate-100 px-4 py-3.5 xl:px-5">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100/80">
+          <TimerReset className="h-[18px] w-[18px]" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-            Study Hours
+          <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">
+            Focus time
           </p>
-          <div className="flex items-baseline gap-2 mt-0.5">
-            <h3 className="text-xl font-extrabold text-slate-900 leading-none">
+          <div className="mt-1 flex items-end gap-2">
+            <h3 className="text-[22px] font-bold leading-none tracking-[-0.04em] text-slate-950">
               {formattedDuration}
             </h3>
-            <span className="text-[11px] font-medium text-slate-500">
-              Goal: 4h
+            <span className="pb-0.5 text-[10.5px] font-semibold text-slate-400">
+              of 4h goal
             </span>
           </div>
-          <div className="w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
+          <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-100">
             <div
-              className="h-full bg-[#10B981] rounded-full transition-all duration-300"
+              className="h-full rounded-full bg-emerald-500 transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -72,42 +81,44 @@ export function ScheduleSummary({ events }: ScheduleSummaryProps) {
       </div>
 
       {/* ── Card 3: Next Event ── */}
-      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-purple-200 transition-all min-h-[86px]">
-        <div className="w-10 h-10 rounded-[10px] bg-[#FAF5FF] text-[#7C3AED] flex items-center justify-center flex-shrink-0">
-          <GraduationCap className="w-5 h-5 text-[#7C3AED]" />
+      <div className="relative flex min-h-[92px] items-center gap-3 overflow-hidden border-r border-indigo-100 bg-gradient-to-br from-indigo-50/80 to-violet-50/50 px-4 py-3.5 xl:px-5">
+        <div className="pointer-events-none absolute -right-5 -top-10 h-24 w-24 rounded-full bg-indigo-200/30 blur-2xl" />
+        <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-[0_8px_18px_rgba(79,70,229,0.22)]">
+          <Clock3 className="h-[18px] w-[18px]" />
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-            Next Up
+        <div className="relative min-w-0 flex-1">
+          <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-indigo-400">
+            Coming up next
           </p>
-          <h3 className="text-[13px] font-bold text-slate-900 truncate mt-0.5 leading-tight">
+          <h3 className="mt-1 truncate text-[13px] font-bold leading-tight text-slate-950">
             {nextEvent ? nextEvent.title : "No upcoming events"}
           </h3>
-          <p className="text-[11px] font-semibold text-[#4F46E5] truncate mt-0.5">
+          <p className="mt-1 truncate text-[10.5px] font-semibold text-indigo-600">
             {nextEvent ? `${nextCountdown} • ${nextTimeRange}` : "All clear for now"}
           </p>
         </div>
+        {nextEvent ? <ArrowUpRight className="relative h-4 w-4 flex-shrink-0 text-indigo-400" /> : null}
       </div>
 
       {/* ── Card 4: Pending Tasks ── */}
-      <div className="bg-white rounded-[14px] p-3.5 border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] flex items-center gap-3 hover:border-amber-200 transition-all min-h-[86px]">
-        <div className="w-10 h-10 rounded-[10px] bg-[#FFFBEB] text-[#D97706] flex items-center justify-center flex-shrink-0">
-          <ClipboardList className="w-5 h-5 text-[#D97706]" />
+      <div className="flex min-h-[92px] items-center gap-3 px-4 py-3.5 xl:px-5">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-amber-100/80">
+          <ClipboardCheck className="h-[18px] w-[18px]" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-            Pending Tasks
+          <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">
+            Needs attention
           </p>
-          <div className="flex items-baseline gap-2 mt-0.5">
-            <h3 className="text-xl font-extrabold text-slate-900 leading-none">
+          <div className="mt-1 flex items-end gap-2">
+            <h3 className="text-[22px] font-bold leading-none tracking-[-0.04em] text-slate-950">
               {pendingTotal}
             </h3>
-            <span className="text-[11px] font-medium text-slate-500 truncate">
-              {assignments} asgn • {exams} exam
+            <span className="truncate pb-0.5 text-[10.5px] font-semibold text-slate-400">
+              {assignments} assignments · {exams} exams
             </span>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

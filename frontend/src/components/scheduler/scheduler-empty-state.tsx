@@ -20,7 +20,7 @@ export function SchedulerEmptyState({
 }: SchedulerEmptyStateProps) {
   if (type === "no-search-results") {
     return (
-      <div className="bg-white rounded-[14px] border border-slate-200 p-10 text-center shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
+      <div className="h-full bg-white p-10 text-center">
         <div className="w-12 h-12 rounded-full bg-indigo-50 text-[#4F46E5] flex items-center justify-center mx-auto mb-3">
           <Search className="w-6 h-6" />
         </div>
@@ -45,7 +45,7 @@ export function SchedulerEmptyState({
 
   if (type === "no-filter-results") {
     return (
-      <div className="bg-white rounded-[14px] border border-slate-200 p-10 text-center shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
+      <div className="h-full bg-white p-10 text-center">
         <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
           <FilterX className="w-6 h-6" />
         </div>
@@ -67,7 +67,7 @@ export function SchedulerEmptyState({
   }
 
   return (
-    <div className="bg-white rounded-[14px] border border-slate-200 p-10 text-center shadow-[0_1px_3px_rgba(15,23,42,0.06)]">
+    <div className="h-full bg-white p-10 text-center">
       <div className="w-12 h-12 rounded-full bg-indigo-50 text-[#4F46E5] flex items-center justify-center mx-auto mb-3">
         <Calendar className="w-6 h-6" />
       </div>

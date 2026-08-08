@@ -69,7 +69,7 @@ export function AgendaView({
   }
 
   return (
-    <div className="h-full overflow-y-auto overscroll-contain pr-1 space-y-4">
+    <div className="h-full space-y-3 overflow-y-auto overscroll-contain bg-slate-50/60 p-4">
       {grouped.map(({ day, events: dayEvents }) => {
         const isCurrent = isToday(day);
         const dayFormatted = format(day, "EEEE, MMMM d");
@@ -77,12 +77,12 @@ export function AgendaView({
         return (
           <div
             key={day.toISOString()}
-            className="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden"
+            className="overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03)]"
           >
             {/* Day Group Header */}
             <div
               className={`px-5 py-3 border-b border-slate-100 flex items-center justify-between ${
-                isCurrent ? "bg-indigo-50/40" : "bg-slate-50/50"
+                isCurrent ? "bg-indigo-50/60" : "bg-slate-50/70"
               }`}
             >
               <div className="flex items-center gap-2.5">
@@ -90,7 +90,7 @@ export function AgendaView({
                   {dayFormatted}
                 </span>
                 {isCurrent && (
-                  <span className="bg-[#4F46E5] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-[9.5px] font-bold text-white">
                     Today
                   </span>
                 )}

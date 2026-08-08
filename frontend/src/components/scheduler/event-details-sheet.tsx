@@ -52,13 +52,13 @@ export function EventDetailsSheet({
   return (
     <div
       data-scheduler
-      className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 backdrop-blur-sm sm:items-center sm:p-4"
       onMouseDown={(mouseEvent) => {
         if (mouseEvent.target === mouseEvent.currentTarget) onClose();
       }}
     >
       <div
-        className="max-h-[92dvh] overflow-y-auto bg-white rounded-t-[22px] sm:rounded-[16px] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] sm:p-6 max-w-md w-full shadow-2xl border border-slate-200 animate-fadeIn"
+        className="animate-fadeIn max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-t-[24px] border border-slate-200 bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-[0_24px_64px_rgba(15,23,42,0.22)] sm:rounded-[20px] sm:p-6"
         role="dialog"
         aria-modal="true"
         aria-labelledby="event-details-title"
@@ -76,7 +76,7 @@ export function EventDetailsSheet({
 
             <h3
               id="event-details-title"
-              className={`text-lg font-bold text-slate-900 mt-2 truncate ${
+              className={`mt-2 truncate text-xl font-bold tracking-[-0.025em] text-slate-950 ${
                 isCompleted ? "line-through text-slate-400" : ""
               }`}
             >
@@ -156,7 +156,7 @@ export function EventDetailsSheet({
             className={`py-2.5 px-3 rounded-[10px] border text-[12.5px] font-bold flex items-center justify-center gap-2 transition-colors ${
               isCompleted
                 ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                : "border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
             }`}
           >
             <CheckCircle2 className="w-4 h-4" />

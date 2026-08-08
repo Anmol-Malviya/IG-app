@@ -49,32 +49,38 @@ export function CalendarDayColumn({
     <div
       ref={setNodeRef}
       style={{ height: `${gridHeight}px` }}
-      className={`relative min-w-[150px] flex-1 border-r border-slate-200 last:border-r-0 transition-colors ${
-        isCurrentDay ? "bg-indigo-50/15" : "bg-white"
-      } ${isOver ? "bg-indigo-50/40 ring-1 ring-inset ring-indigo-400" : ""}`}
+      className={`relative min-w-[152px] flex-1 border-r border-slate-200/80 transition-colors last:border-r-0 ${
+        isCurrentDay ? "bg-indigo-50/25" : "bg-white"
+      } ${isOver ? "bg-indigo-50/60 ring-2 ring-inset ring-indigo-400/70" : ""}`}
     >
       {/* Background Hour Slots for Click-to-Add */}
       {slots.map((slot) => (
         <div
           key={slot.label}
           style={{ height: `${HOUR_HEIGHT_PX}px` }}
-          className="relative border-b border-slate-100 flex flex-col group/slot"
+          className="group/slot relative flex flex-col border-b border-slate-100"
         >
           {/* Top half hour click zone */}
-          <div
+          <button
+            type="button"
             onClick={() => onSlotClick(day, slot.hour, 0)}
-            className="flex-1 cursor-pointer hover:bg-indigo-50/30 transition-colors"
+            className="flex-1 cursor-pointer transition-colors hover:bg-indigo-50/50 focus-visible:z-10"
             title={`Add event at ${slot.label}`}
+            aria-label={`Add event at ${slot.label} on ${format(day, "EEEE, MMMM d")}`}
           />
           {/* Subtle half-hour divider */}
-          <div className="border-b border-dashed border-slate-100/70 pointer-events-none" />
+          <div className="pointer-events-none border-b border-dashed border-slate-100/90" />
           {/* Bottom half hour click zone */}
-          <div
+          <button
+            type="button"
             onClick={() => onSlotClick(day, slot.hour, 30)}
-            className="flex-1 cursor-pointer hover:bg-indigo-50/30 transition-colors"
+            className="flex-1 cursor-pointer transition-colors hover:bg-indigo-50/50 focus-visible:z-10"
             title={`Add event at ${slot.hour > 12 ? slot.hour - 12 : slot.hour}:30 ${
               slot.hour >= 12 ? "PM" : "AM"
             }`}
+            aria-label={`Add event at ${slot.hour > 12 ? slot.hour - 12 : slot.hour}:30 ${
+              slot.hour >= 12 ? "PM" : "AM"
+            } on ${format(day, "EEEE, MMMM d")}`}
           />
         </div>
       ))}
@@ -85,8 +91,8 @@ export function CalendarDayColumn({
           className="absolute left-0 right-0 z-30 pointer-events-none flex items-center"
           style={{ top: `${currentTimeTop}px` }}
         >
-          <div className="w-2.5 h-2.5 rounded-full bg-rose-500 -ml-1 shadow-sm" />
-          <div className="flex-1 h-[2px] bg-rose-500 shadow-xs" />
+          <div className="-ml-1 h-2.5 w-2.5 rounded-full bg-rose-500 shadow-[0_0_0_3px_rgba(244,63,94,0.12)]" />
+          <div className="h-[1.5px] flex-1 bg-rose-500" />
         </div>
       )}
 
@@ -102,12 +108,12 @@ export function CalendarDayColumn({
         return (
           <div
             key={event._id}
-            className="absolute z-20"
+            className="absolute z-20 px-px"
             style={{
               top: `${top + 1}px`,
               height: `${height - 2}px`,
-              left: `calc(${leftPercent}% + 2px)`,
-              width: `calc(${colWidthPercent}% - 4px)`,
+              left: `calc(${leftPercent}% + 3px)`,
+              width: `calc(${colWidthPercent}% - 6px)`,
             }}
           >
             <ScheduleEventCard

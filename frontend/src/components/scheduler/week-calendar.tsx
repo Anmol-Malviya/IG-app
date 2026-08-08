@@ -99,22 +99,22 @@ export function WeekCalendar({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="h-full min-h-[360px] bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden flex flex-col">
+      <div className="flex h-full min-h-[360px] flex-col overflow-hidden bg-white">
         {/* Horizontal scroll container for the calendar grid */}
         <div className="h-full min-h-0 overflow-auto overscroll-contain">
-          <div className="min-w-[1122px] flex flex-col">
+          <div className="flex min-w-[1132px] flex-col">
             {/* Sticky Calendar Day Header */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "72px repeat(7, minmax(150px, 1fr))",
+                gridTemplateColumns: "68px repeat(7, minmax(152px, 1fr))",
               }}
-              className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200"
+              className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 shadow-[0_1px_0_rgba(15,23,42,0.02)] backdrop-blur-md"
             >
               {/* Top-left corner box */}
-              <div className="h-14 border-r border-slate-200 flex items-center justify-center bg-slate-50/70">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  GMT
+              <div className="flex h-16 items-center justify-center border-r border-slate-200/80 bg-slate-50/70">
+                <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                  Local
                 </span>
               </div>
 
@@ -124,27 +124,25 @@ export function WeekCalendar({
                 return (
                   <div
                     key={day.toISOString()}
-                    className={`h-14 border-r border-slate-200 last:border-r-0 flex flex-col items-center justify-center px-2 transition-colors ${
-                      isCurrent ? "bg-indigo-50/40" : "bg-white"
+                    className={`flex h-16 items-center justify-center gap-2 border-r border-slate-200/80 px-2 transition-colors last:border-r-0 ${
+                      isCurrent ? "bg-indigo-50/55" : "bg-white"
                     }`}
                   >
-                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                    <span className={`text-[10px] font-bold uppercase tracking-[0.14em] ${isCurrent ? "text-indigo-500" : "text-slate-400"}`}>
                       {format(day, "EEE")}
                     </span>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span
-                        className={`text-[13px] font-bold inline-flex items-center justify-center px-2 py-0.5 rounded-full ${
-                          isCurrent
-                            ? "bg-[#4F46E5] text-white shadow-xs font-extrabold"
-                            : "text-slate-800"
-                        }`}
-                      >
-                        {format(day, "d")}
-                      </span>
-                      <span className="text-[11px] font-medium text-slate-400">
-                        {format(day, "MMM")}
-                      </span>
-                    </div>
+                    <span
+                      className={`inline-flex h-8 min-w-8 items-center justify-center rounded-xl px-1.5 text-[13px] font-bold ${
+                        isCurrent
+                          ? "bg-indigo-600 text-white shadow-[0_5px_12px_rgba(79,70,229,0.22)]"
+                          : "bg-slate-50 text-slate-800"
+                      }`}
+                    >
+                      {format(day, "d")}
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-400">
+                      {format(day, "MMM")}
+                    </span>
                   </div>
                 );
               })}
@@ -154,9 +152,9 @@ export function WeekCalendar({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "72px repeat(7, minmax(150px, 1fr))",
+                gridTemplateColumns: "68px repeat(7, minmax(152px, 1fr))",
               }}
-              className="relative bg-white"
+              className="relative bg-[#fbfcfe]"
             >
               <CalendarTimeColumn />
 
@@ -184,7 +182,7 @@ export function WeekCalendar({
       {/* Drag Overlay Preview */}
       <DragOverlay>
         {activeDragEvent ? (
-          <div className="w-56 pointer-events-none opacity-90 shadow-2xl scale-105">
+          <div className="pointer-events-none w-56 scale-105 opacity-95 shadow-2xl">
             <ScheduleEventCard
               event={activeDragEvent}
               isDragging

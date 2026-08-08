@@ -31,6 +31,7 @@ import { EventDetailsSheet } from "@/components/scheduler/event-details-sheet";
 import { SchedulerSkeleton } from "@/components/scheduler/scheduler-skeleton";
 import { SchedulerEmptyState } from "@/components/scheduler/scheduler-empty-state";
 import { SchedulerFilterState } from "@/components/scheduler/scheduler-filters";
+import { CalendarRange, CircleCheck } from "lucide-react";
 
 export default function WeeklySchedulePage() {
   const { user } = useAuth();
@@ -443,47 +444,61 @@ export default function WeeklySchedulePage() {
         onSearchChange={setSearchQuery}
         user={user}
       >
-        {/* Page Greeting & Dynamic Date */}
-        <div className="shrink-0 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-[22px] xl:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Good {getGreetingTime()}, {user?.firstName || "Student"} 👋
-            </h1>
-            <p className="text-[13px] text-slate-500 mt-0.5 font-medium">
-              {format(new Date(), "EEEE, MMMM d, yyyy")}
-            </p>
+        {/* Page identity */}
+        <div className="flex shrink-0 flex-wrap items-end justify-between gap-3">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-indigo-100 bg-white text-indigo-600 shadow-sm">
+              <CalendarRange className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-[22px] font-bold tracking-[-0.035em] text-slate-950 xl:text-[25px]">
+                  Weekly schedule
+                </h1>
+                <span className="hidden items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[9.5px] font-bold uppercase tracking-[0.08em] text-emerald-700 ring-1 ring-emerald-100 xl:flex">
+                  <CircleCheck className="h-3 w-3" /> Current week
+                </span>
+              </div>
+              <p className="mt-0.5 text-[12px] font-medium text-slate-500">
+                Good {getGreetingTime()}, {user?.firstName || "Student"}. Plan your week with clarity.
+              </p>
+            </div>
           </div>
+          <p className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-[11px] font-semibold text-slate-500 shadow-sm">
+            {format(new Date(), "EEEE, MMMM d, yyyy")}
+          </p>
         </div>
 
         {/* Dynamic Summary Cards */}
         <ScheduleSummary events={rawEvents} />
 
-        {/* Calendar Toolbar (Navigation, Views, Filters, Add CTA) */}
-        <CalendarToolbar
-          currentDate={currentDate}
-          selectedDay={selectedDay}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          onPrev={handlePrev}
-          onNext={handleNext}
-          onToday={handleToday}
-          onAddEvent={() => {
-            setQuickAddInitial({
-              date: format(selectedDay, "yyyy-MM-dd"),
-              startTime: "09:00",
-              endTime: "10:00",
-            });
-            setQuickAddOpen(true);
-          }}
-          filters={filters}
-          onFilterChange={setFilters}
-          activeFilterCount={activeFilterCount}
-        />
+        {/* Unified planning workspace */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[18px] border border-slate-200/90 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03),0_12px_32px_rgba(15,23,42,0.035)]">
+          <CalendarToolbar
+            currentDate={currentDate}
+            selectedDay={selectedDay}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onToday={handleToday}
+            onAddEvent={() => {
+              setQuickAddInitial({
+                date: format(selectedDay, "yyyy-MM-dd"),
+                startTime: "09:00",
+                endTime: "10:00",
+              });
+              setQuickAddOpen(true);
+            }}
+            filters={filters}
+            onFilterChange={setFilters}
+            activeFilterCount={activeFilterCount}
+          />
 
-        {/* Active Scheduler View Area */}
-        <section className="min-h-0 flex-1" aria-live="polite">
-          {renderActiveView()}
-        </section>
+          <section className="min-h-0 flex-1 bg-white" aria-live="polite">
+            {renderActiveView()}
+          </section>
+        </div>
       </SchedulerShell>
 
       {/* ══════════════════════════════════════════════════════════════
