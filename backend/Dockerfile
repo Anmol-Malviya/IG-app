@@ -1,15 +1,21 @@
+# ─── Builder Stage ──────────────────────────────────────────────────
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Install all dependencies (including devDependencies needed for build)
 COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci
 
-# Copy source and build
+# Copy tsconfig and source code
 COPY tsconfig.json ./
 COPY src/ ./src/
-RUN npm install -g typescript && tsc && npm uninstall -g typescript
+
+# Compile TypeScript
+RUN npm run build
+
+# Prune devDependencies to keep only production modules
+RUN npm prune --omit=dev
 
 # ─── Production Stage ────────────────────────────────────────────────
 FROM node:20-alpine
@@ -21,9 +27,9 @@ RUN addgroup -g 1001 -S appgroup && \
     adduser -S appuser -u 1001 -G appgroup
 
 # Copy production dependencies and built files
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY package.json ./
+COPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules
+COPY --from=builder --chown=appuser:appgroup /app/dist ./dist
+COPY --from=builder --chown=appuser:appgroup /app/package.json ./package.json
 
 # Set environment
 ENV NODE_ENV=production
