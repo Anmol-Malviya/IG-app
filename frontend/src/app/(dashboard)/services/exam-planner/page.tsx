@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -23,30 +23,9 @@ interface Exam {
 }
 
 const initialExams: Exam[] = [
-  {
-    id: "1",
-    subject: "Mathematics",
-    title: "Calculus Mid Semester",
-    date: "2026-08-20",
-    time: "10:00",
-    progress: 72,
-  },
-  {
-    id: "2",
-    subject: "Data Structures",
-    title: "Algorithms & Trees Exam",
-    date: "2026-08-28",
-    time: "14:00",
-    progress: 46,
-  },
-  {
-    id: "3",
-    subject: "Cyber Security",
-    title: "Network Security Quiz",
-    date: "2026-08-14",
-    time: "09:00",
-    progress: 88,
-  },
+  { id: "1", subject: "Mathematics", title: "Calculus Mid Semester", date: "2026-08-20", time: "10:00", progress: 72 },
+  { id: "2", subject: "Data Structures", title: "Algorithms & Trees Exam", date: "2026-08-28", time: "14:00", progress: 46 },
+  { id: "3", subject: "Cyber Security", title: "Network Security Quiz", date: "2026-08-14", time: "09:00", progress: 88 },
 ];
 
 export default function ExamPlannerPage() {
@@ -55,16 +34,18 @@ export default function ExamPlannerPage() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [todayStart, setTodayStart] = useState<number | null>(null);
 
-  const todayStart = () => {
+  useEffect(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return today.getTime();
-  };
+    setTodayStart(today.getTime());
+  }, []);
 
   const daysUntil = (examDate: string) => {
+    if (todayStart === null) return 0;
     const target = new Date(`${examDate}T00:00:00`).getTime();
-    return Math.ceil((target - todayStart()) / 86_400_000);
+    return Math.ceil((target - todayStart) / 86_400_000);
   };
 
   const orderedExams = useMemo(
@@ -84,14 +65,7 @@ export default function ExamPlannerPage() {
 
     setExams((current) => [
       ...current,
-      {
-        id: Date.now().toString(),
-        subject: subject.trim(),
-        title: title.trim(),
-        date,
-        time,
-        progress: 0,
-      },
+      { id: Date.now().toString(), subject: subject.trim(), title: title.trim(), date, time, progress: 0 },
     ]);
     setSubject("");
     setTitle("");
@@ -101,7 +75,9 @@ export default function ExamPlannerPage() {
 
   const updateProgress = (id: string, progress: number) => {
     setExams((current) =>
-      current.map((exam) => (exam.id === id ? { ...exam, progress: Math.max(0, Math.min(100, progress)) } : exam))
+      current.map((exam) =>
+        exam.id === id ? { ...exam, progress: Math.max(0, Math.min(100, progress)) } : exam
+      )
     );
   };
 
