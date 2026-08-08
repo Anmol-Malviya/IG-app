@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7f8fc]">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#f7f8fc]">
         <div className="h-9 w-9 animate-spin rounded-full border-4 border-slate-200 border-t-indigo-600" />
       </div>
     );
@@ -50,7 +50,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const initials = `${user?.firstName?.[0] ?? "S"}${user?.lastName?.[0] ?? ""}`.toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#f7f8fc] text-slate-950">
+    <div className="min-h-[100dvh] w-full overflow-x-clip bg-[#f7f8fc] text-slate-950">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-[282px] border-r border-slate-200/80 bg-white lg:flex lg:flex-col">
         <div className="flex h-20 items-center border-b border-slate-100 px-6">
           <Link href="/dashboard" className="flex items-center gap-3 text-slate-950 no-underline">
@@ -112,39 +112,39 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      <div className="lg:pl-[282px]">
-        <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
-          <div className="mx-auto flex h-16 max-w-[1480px] items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-8">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-white lg:hidden">
-                <Sparkles size={17} />
+      <div className="w-full min-w-0 lg:pl-[282px]">
+        <header className="sticky top-0 z-30 w-full border-b border-slate-200/70 bg-white/95 backdrop-blur-xl">
+          <div className="mx-auto flex h-[68px] w-full max-w-[1480px] items-center justify-between gap-3 px-3.5 sm:h-20 sm:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-slate-950 text-white lg:hidden">
+                <Sparkles size={18} />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-slate-400 lg:hidden">IG App</p>
-                <h1 className="text-base font-extrabold tracking-[-0.02em] text-slate-950 sm:text-lg lg:text-xl">
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold leading-none text-slate-400 lg:hidden">IG App</p>
+                <h1 className="mt-1 truncate text-lg font-extrabold leading-tight tracking-[-0.025em] text-slate-950 lg:mt-0 lg:text-xl">
                   {pageTitle}
                 </h1>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex shrink-0 items-center gap-3">
               <div className="hidden text-right sm:block">
                 <p className="text-xs font-medium text-slate-400">Focused workspace</p>
                 <p className="text-sm font-bold text-slate-700">4 essential tools</p>
               </div>
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 text-xs font-extrabold text-indigo-700 lg:hidden">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-indigo-100 text-xs font-extrabold text-indigo-700 lg:hidden">
                 {initials}
               </div>
             </div>
           </div>
         </header>
 
-        <main className="mx-auto max-w-[1480px] px-4 pb-28 pt-5 sm:px-6 sm:pt-7 lg:px-8 lg:pb-10 lg:pt-8">
+        <main className="mx-auto w-full min-w-0 max-w-[1480px] overflow-x-clip px-3.5 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-3.5 sm:px-6 sm:pt-7 lg:px-8 lg:pb-10 lg:pt-8">
           {children}
         </main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
-        <div className="mx-auto grid max-w-xl grid-cols-5 gap-1">
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200/90 bg-white/95 px-1.5 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-8px_30px_-24px_rgba(15,23,42,0.4)] backdrop-blur-xl lg:hidden">
+        <div className="mx-auto grid w-full max-w-xl grid-cols-5 gap-1">
           {navigation.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -153,8 +153,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 aria-label={item.label}
-                className={`flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[10px] font-bold no-underline transition ${
-                  active ? "bg-slate-950 text-white" : "text-slate-400"
+                className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-[14px] px-1 py-1.5 text-[9px] font-bold leading-none no-underline transition ${
+                  active ? "bg-slate-950 text-white shadow-sm" : "text-slate-400"
                 }`}
               >
                 <Icon size={18} strokeWidth={2.1} />

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -14,8 +14,14 @@ export const metadata: Metadata = {
     default: "IG App",
     template: "%s | IG App",
   },
-  description: "A modern SaaS platform for managing your business",
-  keywords: ["saas", "dashboard", "management"],
+  description: "A focused student workspace for schedules, assignments, exams, and study resources.",
+  keywords: ["student", "schedule", "assignments", "exam planner", "study resources"],
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -23,9 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={inter.variable} data-theme="light">
       <body>
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>
