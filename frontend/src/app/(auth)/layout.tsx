@@ -1,19 +1,9 @@
 import React from "react";
 
 /**
- * Auth layout — no sidebar, centered content.
- * Used for login and register pages.
+ * Auth layout — passthrough wrapper.
+ * Each auth page (login/register) manages its own full-page layout.
  */
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="auth-layout">
-      <div className="auth-container">
-        {children}
-      </div>
-    </div>
-  );
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

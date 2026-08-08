@@ -30,6 +30,7 @@ export default function AdminLoginPage() {
   return (
     <>
       <div className="auth-header">
+        <div className="auth-logo">IG</div>
         <h1>Admin Login</h1>
         <p>Superadmin access only</p>
       </div>

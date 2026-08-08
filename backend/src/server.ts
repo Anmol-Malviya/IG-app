@@ -1,3 +1,15 @@
+import dns from "dns";
+
+// Force IPv4 first and set fallback DNS servers for local development database connection
+if (process.env.NODE_ENV !== "production") {
+  dns.setDefaultResultOrder("ipv4first");
+  try {
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  } catch (err) {
+    // Ignore error if it fails to set dns servers
+  }
+}
+
 import { app } from "./app";
 import { config, validateConfig } from "./config";
 import { connectDatabase, disconnectDatabase } from "./config/database";

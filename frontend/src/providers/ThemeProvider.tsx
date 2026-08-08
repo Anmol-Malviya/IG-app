@@ -12,14 +12,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    // Load saved theme or use system preference
+    // Load saved theme or default to light
     const saved = localStorage.getItem("theme") as Theme;
     if (saved) {
       setTheme(saved);
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    } else {
       setTheme("light");
     }
   }, []);
