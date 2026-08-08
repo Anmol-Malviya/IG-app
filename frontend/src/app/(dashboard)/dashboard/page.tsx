@@ -56,44 +56,44 @@ export default function DashboardPage() {
   const firstName = user?.firstName || "Student";
 
   return (
-    <div className="space-y-7 sm:space-y-8">
-      <section className="relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-7 text-white shadow-[0_20px_60px_-35px_rgba(15,23,42,0.8)] sm:px-8 sm:py-9 lg:px-10 lg:py-10">
-        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
+    <div className="w-full min-w-0 space-y-5 sm:space-y-8">
+      <section className="relative w-full min-w-0 overflow-hidden rounded-[24px] border border-slate-800 bg-slate-950 px-4 py-5 text-white shadow-[0_18px_50px_-34px_rgba(15,23,42,0.85)] sm:rounded-[28px] sm:px-8 sm:py-9 lg:px-10 lg:py-10">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl sm:h-64 sm:w-64" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/3 h-48 w-48 rounded-full bg-cyan-400/10 blur-3xl sm:h-56 sm:w-56" />
 
-        <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300">
-              <Sparkles size={14} className="text-indigo-300" />
-              Focused student workspace
+        <div className="relative flex min-w-0 flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0 max-w-2xl">
+            <div className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] font-bold text-slate-300 sm:mb-5 sm:px-3 sm:text-xs">
+              <Sparkles size={13} className="shrink-0 text-indigo-300" />
+              <span className="truncate">Focused student workspace</span>
             </div>
-            <p className="mb-2 text-sm font-semibold text-slate-400">Your focused dashboard</p>
-            <h2 className="max-w-xl text-3xl font-black tracking-[-0.045em] sm:text-4xl lg:text-[42px] lg:leading-[1.05]">
+            <p className="mb-1.5 text-xs font-semibold text-slate-400 sm:mb-2 sm:text-sm">Your focused dashboard</p>
+            <h2 className="max-w-xl break-words text-[28px] font-black leading-[1.08] tracking-[-0.04em] sm:text-4xl lg:text-[42px] lg:leading-[1.05]">
               Welcome back, {firstName}.
             </h2>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
+            <p className="mt-3 max-w-xl text-[13px] leading-5 text-slate-300 sm:mt-4 sm:text-base sm:leading-7">
               Everything you need for classes, deadlines, exams, and study resources — nothing extra.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
-              <p className="text-2xl font-black tracking-tight">4</p>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">Core tools</p>
+          <div className="grid w-full grid-cols-2 gap-2 sm:w-auto sm:flex sm:gap-3">
+            <div className="min-w-0 rounded-[18px] border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-sm sm:px-4 sm:py-3">
+              <p className="text-xl font-black tracking-tight sm:text-2xl">4</p>
+              <p className="truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-400 sm:text-[11px] sm:tracking-[0.14em]">Core tools</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
-              <p className="text-2xl font-black tracking-tight">1</p>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">Workspace</p>
+            <div className="min-w-0 rounded-[18px] border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-sm sm:px-4 sm:py-3">
+              <p className="text-xl font-black tracking-tight sm:text-2xl">1</p>
+              <p className="truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-400 sm:text-[11px] sm:tracking-[0.14em]">Workspace</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section>
-        <div className="mb-4 flex items-end justify-between gap-4 sm:mb-5">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600">Core features</p>
-            <h3 className="mt-1 text-xl font-extrabold tracking-[-0.025em] text-slate-950 sm:text-2xl">
+      <section className="min-w-0">
+        <div className="mb-3 flex min-w-0 items-end justify-between gap-4 sm:mb-5">
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-indigo-600 sm:text-xs">Core features</p>
+            <h3 className="mt-1 text-[22px] font-extrabold leading-tight tracking-[-0.03em] text-slate-950 sm:text-2xl">
               Your study command center
             </h3>
           </div>
@@ -102,34 +102,34 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:gap-5">
+        <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:gap-5">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
               <Link
                 key={feature.title}
                 href={feature.href}
-                className="group relative overflow-hidden rounded-[24px] border border-slate-200/80 bg-white p-5 text-slate-950 no-underline shadow-[0_10px_35px_-28px_rgba(15,23,42,0.5)] transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_24px_55px_-30px_rgba(15,23,42,0.35)] sm:p-6"
+                className="group relative min-w-0 overflow-hidden rounded-[20px] border border-slate-200/80 bg-white p-4 text-slate-950 no-underline shadow-[0_10px_30px_-26px_rgba(15,23,42,0.45)] transition duration-300 sm:rounded-[24px] sm:p-6 sm:hover:-translate-y-1 sm:hover:border-slate-300 sm:hover:shadow-[0_24px_55px_-30px_rgba(15,23,42,0.35)]"
               >
-                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.accentClass} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
-                <div className="relative">
-                  <div className="mb-8 flex items-start justify-between gap-4">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${feature.iconClass}`}>
-                      <Icon size={22} strokeWidth={2.1} />
+                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.accentClass} opacity-0 transition-opacity duration-300 sm:group-hover:opacity-100`} />
+                <div className="relative min-w-0">
+                  <div className="mb-5 flex items-start justify-between gap-4 sm:mb-8">
+                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[16px] sm:h-12 sm:w-12 sm:rounded-2xl ${feature.iconClass}`}>
+                      <Icon size={21} strokeWidth={2.1} />
                     </div>
-                    <span className="text-xs font-black tracking-[0.16em] text-slate-300">{feature.number}</span>
+                    <span className="shrink-0 pt-1 text-[10px] font-black tracking-[0.14em] text-slate-300 sm:text-xs sm:tracking-[0.16em]">{feature.number}</span>
                   </div>
 
-                  <h4 className="max-w-sm text-xl font-extrabold tracking-[-0.025em] sm:text-[22px]">
+                  <h4 className="max-w-sm break-words text-[19px] font-extrabold leading-[1.18] tracking-[-0.025em] sm:text-[22px]">
                     {feature.title}
                   </h4>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+                  <p className="mt-2 max-w-md text-[13px] leading-5 text-slate-500 sm:text-sm sm:leading-6">
                     {feature.description}
                   </p>
 
-                  <div className="mt-6 flex items-center gap-2 text-sm font-bold text-slate-900">
+                  <div className="mt-4 flex items-center gap-2 text-[13px] font-bold text-slate-900 sm:mt-6 sm:text-sm">
                     Open workspace
-                    <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight size={15} className="transition-transform duration-300 sm:group-hover:translate-x-0.5 sm:group-hover:-translate-y-0.5" />
                   </div>
                 </div>
               </Link>
@@ -138,14 +138,14 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-5 sm:flex sm:items-center sm:justify-between sm:px-6">
+      <section className="rounded-[20px] border border-slate-200/80 bg-white px-4 py-4 sm:flex sm:items-center sm:justify-between sm:rounded-[24px] sm:px-6 sm:py-5">
         <div>
-          <p className="text-sm font-extrabold text-slate-950">Built for quick daily use</p>
-          <p className="mt-1 text-sm leading-6 text-slate-500">
+          <p className="text-[13px] font-extrabold text-slate-950 sm:text-sm">Built for quick daily use</p>
+          <p className="mt-1 text-[12px] leading-5 text-slate-500 sm:text-sm sm:leading-6">
             Open the app, check what matters, update it, and get back to studying.
           </p>
         </div>
-        <div className="mt-4 inline-flex rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 sm:mt-0">
+        <div className="mt-3 inline-flex rounded-full bg-slate-100 px-3 py-1.5 text-[10px] font-bold text-slate-600 sm:mt-0 sm:text-xs">
           Mobile-first • Minimal • Fast
         </div>
       </section>
