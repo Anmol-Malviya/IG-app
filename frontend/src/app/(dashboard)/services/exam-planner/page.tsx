@@ -1,226 +1,308 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  BookOpenCheck,
+  CalendarDays,
+  Clock3,
+  GraduationCap,
+  Plus,
+  Target,
+  Trash2,
+} from "lucide-react";
 
 interface Exam {
   id: string;
   subject: string;
-  topic: string;
+  title: string;
   date: string;
   time: string;
-  syllabusCovered: number; // percentage
+  progress: number;
 }
 
+const initialExams: Exam[] = [
+  {
+    id: "1",
+    subject: "Mathematics",
+    title: "Calculus Mid Semester",
+    date: "2026-08-20",
+    time: "10:00",
+    progress: 72,
+  },
+  {
+    id: "2",
+    subject: "Data Structures",
+    title: "Algorithms & Trees Exam",
+    date: "2026-08-28",
+    time: "14:00",
+    progress: 46,
+  },
+  {
+    id: "3",
+    subject: "Cyber Security",
+    title: "Network Security Quiz",
+    date: "2026-08-14",
+    time: "09:00",
+    progress: 88,
+  },
+];
+
 export default function ExamPlannerPage() {
-  const [exams, setExams] = useState<Exam[]>([
-    { id: "1", subject: "Advanced Mathematics", topic: "Midterm: Calculus II", date: "2026-08-20", time: "10:00 AM", syllabusCovered: 75 },
-    { id: "2", subject: "Computer Science I", topic: "Final Exam: Algorithms & Trees", date: "2026-08-28", time: "02:00 PM", syllabusCovered: 45 },
-    { id: "3", subject: "Physics II", topic: "Quiz 3: Electromagnetism", date: "2026-08-14", time: "09:00 AM", syllabusCovered: 90 }
-  ]);
+  const [exams, setExams] = useState<Exam[]>(initialExams);
+  const [subject, setSubject] = useState("");
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
 
-  const [newSubject, setNewSubject] = useState("");
-  const [newTopic, setNewTopic] = useState("");
-  const [newDate, setNewDate] = useState("");
-  const [newTime, setNewTime] = useState("");
-  const [newSyllabusCovered, setNewSyllabusCovered] = useState(0);
-
-  const handleAddExam = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newSubject || !newTopic || !newDate || !newTime) return;
-
-    const exam: Exam = {
-      id: Date.now().toString(),
-      subject: newSubject,
-      topic: newTopic,
-      date: newDate,
-      time: newTime,
-      syllabusCovered: newSyllabusCovered
-    };
-
-    setExams([...exams, exam]);
-    setNewSubject("");
-    setNewTopic("");
-    setNewDate("");
-    setNewTime("");
-    setNewSyllabusCovered(0);
+  const todayStart = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.getTime();
   };
 
-  const handleSyllabusChange = (id: string, covered: number) => {
-    setExams(
-      exams.map((e) => (e.id === id ? { ...e, syllabusCovered: Math.min(100, Math.max(0, covered)) } : e))
+  const daysUntil = (examDate: string) => {
+    const target = new Date(`${examDate}T00:00:00`).getTime();
+    return Math.ceil((target - todayStart()) / 86_400_000);
+  };
+
+  const orderedExams = useMemo(
+    () => [...exams].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+    [exams]
+  );
+
+  const upcoming = orderedExams.filter((exam) => daysUntil(exam.date) >= 0);
+  const nearestExam = upcoming[0];
+  const averageProgress = exams.length
+    ? Math.round(exams.reduce((sum, exam) => sum + exam.progress, 0) / exams.length)
+    : 0;
+
+  const handleAdd = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!subject.trim() || !title.trim() || !date || !time) return;
+
+    setExams((current) => [
+      ...current,
+      {
+        id: Date.now().toString(),
+        subject: subject.trim(),
+        title: title.trim(),
+        date,
+        time,
+        progress: 0,
+      },
+    ]);
+    setSubject("");
+    setTitle("");
+    setDate("");
+    setTime("");
+  };
+
+  const updateProgress = (id: string, progress: number) => {
+    setExams((current) =>
+      current.map((exam) => (exam.id === id ? { ...exam, progress: Math.max(0, Math.min(100, progress)) } : exam))
     );
   };
 
-  const handleDeleteExam = (id: string) => {
-    setExams(exams.filter((e) => e.id !== id));
+  const removeExam = (id: string) => {
+    setExams((current) => current.filter((exam) => exam.id !== id));
   };
 
-  return (
-    <div className="service-page">
-      <div className="service-page-header">
-        <Link href="/dashboard" className="back-btn">
-          ←
-        </Link>
-        <div className="service-title-container">
-          <h1>Exam Planner</h1>
-          <p>Organize your test schedule and monitor your syllabus preparation progress.</p>
-        </div>
-      </div>
+  const formatDate = (examDate: string) =>
+    new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short" }).format(
+      new Date(`${examDate}T00:00:00`)
+    );
 
-      <div className="service-content-card">
-        {/* Add Exam Form */}
-        <form onSubmit={handleAddExam} className="form-input-group">
+  return (
+    <div className="space-y-6 sm:space-y-7">
+      <section className="overflow-hidden rounded-[26px] border border-slate-200/80 bg-white shadow-[0_12px_35px_-30px_rgba(15,23,42,0.45)]">
+        <div className="grid lg:grid-cols-[1.35fr_0.65fr]">
+          <div className="p-5 sm:p-6 lg:p-7">
+            <div className="flex items-start gap-4">
+              <Link
+                href="/dashboard"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 no-underline transition hover:bg-slate-50 hover:text-slate-950"
+                aria-label="Back to dashboard"
+              >
+                <ArrowLeft size={18} />
+              </Link>
+              <div>
+                <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-amber-700">
+                  <GraduationCap size={15} />
+                  Exam & study planner
+                </div>
+                <h2 className="text-2xl font-black tracking-[-0.035em] text-slate-950 sm:text-3xl">
+                  Prepare with a clear plan.
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                  Keep exam dates visible, measure preparation, and know exactly where your focus should go next.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100 bg-slate-950 p-5 text-white sm:p-6 lg:border-l lg:border-t-0">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Next focus</p>
+            {nearestExam ? (
+              <>
+                <p className="mt-3 text-lg font-extrabold tracking-[-0.02em]">{nearestExam.subject}</p>
+                <p className="mt-1 text-sm text-slate-400">{nearestExam.title}</p>
+                <div className="mt-5 flex items-end justify-between gap-3">
+                  <div>
+                    <p className="text-3xl font-black tracking-tight">{Math.max(0, daysUntil(nearestExam.date))}</p>
+                    <p className="text-xs font-semibold text-slate-400">days remaining</p>
+                  </div>
+                  <div className="rounded-xl bg-white/10 px-3 py-2 text-sm font-bold">{nearestExam.progress}% ready</div>
+                </div>
+              </>
+            ) : (
+              <p className="mt-3 text-sm leading-6 text-slate-300">No upcoming exam. Add your next exam to start planning.</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-3 sm:grid-cols-3">
+        <div className="rounded-[20px] border border-slate-200/80 bg-white p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">Upcoming</p>
+            <CalendarDays size={17} className="text-indigo-500" />
+          </div>
+          <p className="mt-3 text-2xl font-black text-slate-950">{upcoming.length}</p>
+          <p className="mt-1 text-xs text-slate-400">scheduled exams</p>
+        </div>
+        <div className="rounded-[20px] border border-slate-200/80 bg-white p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">Preparation</p>
+            <Target size={17} className="text-emerald-500" />
+          </div>
+          <p className="mt-3 text-2xl font-black text-slate-950">{averageProgress}%</p>
+          <p className="mt-1 text-xs text-slate-400">average progress</p>
+        </div>
+        <div className="rounded-[20px] border border-slate-200/80 bg-white p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">Study mode</p>
+            <BookOpenCheck size={17} className="text-amber-500" />
+          </div>
+          <p className="mt-3 text-2xl font-black text-slate-950">Focused</p>
+          <p className="mt-1 text-xs text-slate-400">one exam at a time</p>
+        </div>
+      </section>
+
+      <section className="rounded-[24px] border border-slate-200/80 bg-white p-5 sm:p-6">
+        <div className="mb-5">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Plan ahead</p>
+          <h3 className="mt-1 text-lg font-extrabold tracking-[-0.02em] text-slate-950">Schedule an exam</h3>
+        </div>
+
+        <form onSubmit={handleAdd} className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           <input
-            type="text"
-            placeholder="Subject Name (e.g. Physics)"
-            value={newSubject}
-            onChange={(e) => setNewSubject(e.target.value)}
-            required
+            value={subject}
+            onChange={(event) => setSubject(event.target.value)}
+            placeholder="Subject"
+            className="h-12 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-4 focus:ring-amber-100"
           />
           <input
-            type="text"
-            placeholder="Exam Topic (e.g. Midterm)"
-            value={newTopic}
-            onChange={(e) => setNewTopic(e.target.value)}
-            required
-            style={{ flex: 1.5 }}
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Exam / topic"
+            className="h-12 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-amber-400 focus:bg-white focus:ring-4 focus:ring-amber-100"
           />
           <input
             type="date"
-            value={newDate}
-            onChange={(e) => setNewDate(e.target.value)}
-            required
+            value={date}
+            onChange={(event) => setDate(event.target.value)}
+            className="h-12 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 outline-none transition focus:border-amber-400 focus:bg-white focus:ring-4 focus:ring-amber-100"
           />
           <input
-            type="text"
-            placeholder="Time (e.g. 10:00 AM)"
-            value={newTime}
-            onChange={(e) => setNewTime(e.target.value)}
-            required
+            type="time"
+            value={time}
+            onChange={(event) => setTime(event.target.value)}
+            className="h-12 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 outline-none transition focus:border-amber-400 focus:bg-white focus:ring-4 focus:ring-amber-100"
           />
-          <input
-            type="number"
-            placeholder="Syllabus % (0-100)"
-            value={newSyllabusCovered || ""}
-            onChange={(e) => setNewSyllabusCovered(parseInt(e.target.value) || 0)}
-            min="0"
-            max="100"
-            style={{ width: "120px" }}
-          />
-          <button type="submit" className="btn btn-primary" style={{ flexShrink: 0 }}>
-            Schedule Exam
+          <button
+            type="submit"
+            className="flex h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 text-sm font-bold text-white transition hover:bg-slate-800"
+          >
+            <Plus size={17} />
+            Add exam
           </button>
         </form>
+      </section>
 
-        {/* Exams List */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", marginTop: "1.5rem" }}>
-          {exams.map((exam) => {
-            const daysLeft = Math.ceil((new Date(exam.date).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+      <section>
+        <div className="mb-4">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Preparation board</p>
+          <h3 className="mt-1 text-xl font-extrabold tracking-[-0.025em] text-slate-950">Upcoming exams</h3>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          {orderedExams.map((exam) => {
+            const remaining = daysUntil(exam.date);
             return (
-              <div
-                key={exam.id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  padding: "1.5rem",
-                  borderRadius: "var(--radius)",
-                  backgroundColor: "var(--background)",
-                  border: "1px solid var(--border)",
-                  position: "relative"
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
-                  <div>
-                    <span
-                      style={{
-                        padding: "2px 8px",
-                        borderRadius: "8px",
-                        fontSize: "0.7rem",
-                        fontWeight: "bold",
-                        background: "rgba(59, 130, 246, 0.15)",
-                        color: "rgb(59, 130, 246)"
-                      }}
-                    >
+              <article key={exam.id} className="rounded-[22px] border border-slate-200/80 bg-white p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <span className="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-amber-700">
                       {exam.subject}
                     </span>
-                    <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginTop: "0.5rem", color: "var(--foreground)" }}>{exam.topic}</h3>
-                    <p style={{ fontSize: "0.8rem", color: "var(--muted-foreground)", marginTop: "0.2rem" }}>
-                      📅 {exam.date} @ {exam.time}
-                    </p>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{
-                        fontSize: "0.8rem",
-                        padding: "4px 10px",
-                        borderRadius: "12px",
-                        display: "inline-block",
-                        background: daysLeft > 3 ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
-                        color: daysLeft > 3 ? "rgb(16, 185, 129)" : "rgb(239, 68, 68)",
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {daysLeft > 0 ? `${daysLeft} Days Left` : daysLeft === 0 ? "Today" : "Completed"}
+                    <h4 className="mt-3 text-lg font-extrabold tracking-[-0.02em] text-slate-950">{exam.title}</h4>
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold text-slate-500">
+                      <span className="flex items-center gap-1.5"><CalendarDays size={15} /> {formatDate(exam.date)}</span>
+                      <span className="flex items-center gap-1.5"><Clock3 size={15} /> {exam.time}</span>
                     </div>
                   </div>
+                  <button
+                    onClick={() => removeExam(exam.id)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-slate-300 transition hover:bg-rose-50 hover:text-rose-600"
+                    aria-label={`Delete ${exam.title}`}
+                  >
+                    <Trash2 size={17} />
+                  </button>
                 </div>
 
-                {/* Progress bar */}
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.4rem" }}>
-                    <span>Syllabus Covered</span>
-                    <strong>{exam.syllabusCovered}%</strong>
+                <div className="mt-5 rounded-2xl bg-slate-50 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">Preparation progress</p>
+                      <p className="mt-1 text-xl font-black text-slate-950">{exam.progress}%</p>
+                    </div>
+                    <span className={`rounded-full px-3 py-1.5 text-xs font-bold ${remaining <= 3 && remaining >= 0 ? "bg-rose-50 text-rose-700" : "bg-white text-slate-600"}`}>
+                      {remaining > 0 ? `${remaining} days left` : remaining === 0 ? "Today" : "Completed"}
+                    </span>
                   </div>
-                  <div style={{ width: "100%", height: "8px", borderRadius: "4px", background: "var(--border)", overflow: "hidden", display: "flex", alignItems: "center" }}>
-                    <div style={{ width: `${exam.syllabusCovered}%`, height: "100%", background: "linear-gradient(90deg, var(--primary) 0%, rgb(59, 130, 246) 100%)", borderRadius: "4px" }} />
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all"
+                      style={{ width: `${exam.progress}%` }}
+                    />
                   </div>
-                  <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.8rem", alignItems: "center" }}>
-                    <span style={{ fontSize: "0.75rem", color: "var(--muted-foreground)" }}>Update Prep:</span>
-                    <button
-                      onClick={() => handleSyllabusChange(exam.id, exam.syllabusCovered - 10)}
-                      className="btn btn-ghost"
-                      style={{ padding: "2px 8px", fontSize: "0.75rem", minHeight: 0, height: "auto" }}
-                    >
-                      -10%
-                    </button>
-                    <button
-                      onClick={() => handleSyllabusChange(exam.id, exam.syllabusCovered + 10)}
-                      className="btn btn-ghost"
-                      style={{ padding: "2px 8px", fontSize: "0.75rem", minHeight: 0, height: "auto" }}
-                    >
-                      +10%
-                    </button>
-                  </div>
+                  <input
+                    aria-label={`Preparation progress for ${exam.title}`}
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value={exam.progress}
+                    onChange={(event) => updateProgress(exam.id, Number(event.target.value))}
+                    className="mt-4 w-full accent-amber-500"
+                  />
+                  <p className="mt-1 text-xs text-slate-400">Drag to update how much of the syllabus you have prepared.</p>
                 </div>
-
-                <button
-                  onClick={() => handleDeleteExam(exam.id)}
-                  style={{
-                    position: "absolute",
-                    top: "1.5rem",
-                    right: "1.5rem",
-                    background: "transparent",
-                    border: "none",
-                    color: "var(--destructive)",
-                    cursor: "pointer",
-                    fontSize: "0.85rem",
-                    fontWeight: 600
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
+              </article>
             );
           })}
-          {exams.length === 0 && (
-            <div style={{ textAlign: "center", padding: "2rem", color: "var(--muted-foreground)" }}>
-              No upcoming exams scheduled. Great job!
-            </div>
-          )}
         </div>
-      </div>
+
+        {orderedExams.length === 0 && (
+          <div className="rounded-[24px] border border-dashed border-slate-300 bg-white px-5 py-12 text-center">
+            <GraduationCap className="mx-auto text-slate-300" size={30} />
+            <p className="mt-3 text-sm font-bold text-slate-700">No exams scheduled</p>
+            <p className="mt-1 text-sm text-slate-400">Add your next exam above to start planning.</p>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
