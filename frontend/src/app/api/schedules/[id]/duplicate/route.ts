@@ -37,13 +37,13 @@ export async function POST(
 
     // Create a duplicate without _id, timestamps, or recurrence group
     const {
-      _id,
-      createdAt,
-      updatedAt,
-      recurrenceGroupId,
-      __v,
+      _id: _unusedId,
+      createdAt: _unusedCreatedAt,
+      updatedAt: _unusedUpdatedAt,
+      recurrenceGroupId: _unusedGroupId,
+      __v: _unusedV,
       ...duplicateData
-    } = original as Record<string, unknown>;
+    } = original as unknown as Record<string, unknown>;
 
     const duplicate = await Schedule.create({
       ...duplicateData,

@@ -9,6 +9,7 @@ import {
   startOfWeek,
   endOfWeek,
   addDays,
+  subDays,
   isSameDay,
   isToday,
   differenceInMinutes,
@@ -22,10 +23,10 @@ import {
   endOfDay,
 } from "date-fns";
 
-export const HOURS_START = 6; // 6:00 AM
-export const HOURS_END = 23; // 11:00 PM
+export const HOURS_START = 7; // 7:00 AM
+export const HOURS_END = 22; // 10:00 PM
 export const TOTAL_HOURS = HOURS_END - HOURS_START;
-export const HOUR_HEIGHT_PX = 64; // px per hour in the calendar grid
+export const HOUR_HEIGHT_PX = 72; // 72px per hour for premium readability
 
 /**
  * Returns array of 7 days for the week containing the given date.
@@ -39,10 +40,11 @@ export function getWeekDays(date: Date): Date[] {
 /**
  * Format date for display headers: "Mon 12"
  */
-export function formatDayHeader(date: Date): { day: string; num: string } {
+export function formatDayHeader(date: Date): { day: string; num: string; full: string } {
   return {
     day: format(date, "EEE"),
     num: format(date, "d"),
+    full: format(date, "d MMM"),
   };
 }
 
@@ -51,16 +53,23 @@ export function formatDayHeader(date: Date): { day: string; num: string } {
  */
 export function formatTime(date: Date | string): string {
   const d = typeof date === "string" ? parseISO(date) : date;
-  return format(d, "hh:mm a");
+  return format(d, "h:mm a");
 }
 
 /**
- * Format date range for week navigation: "Aug 4 – Aug 10"
+ * Format date range for week navigation: "Aug 4 – Aug 10, 2026"
  */
 export function formatWeekRange(date: Date): string {
   const start = startOfWeek(date, { weekStartsOn: 1 });
   const end = endOfWeek(date, { weekStartsOn: 1 });
   return `${format(start, "MMM d")} – ${format(end, "MMM d, yyyy")}`;
+}
+
+/**
+ * Format single day range for Day navigation: "Monday, Aug 10, 2026"
+ */
+export function formatDayTitle(date: Date): string {
+  return format(date, "EEEE, MMMM d, yyyy");
 }
 
 /**
@@ -81,7 +90,7 @@ export function getEventHeightPx(startDateTime: Date | string, endDateTime: Date
   const end = typeof endDateTime === "string" ? parseISO(endDateTime) : endDateTime;
   const durationMinutes = differenceInMinutes(end, start);
   const height = (durationMinutes / 60) * HOUR_HEIGHT_PX;
-  return Math.max(height, 24); // minimum 24px
+  return Math.max(height, 36); // minimum 36px for readable content
 }
 
 /**
@@ -90,7 +99,7 @@ export function getEventHeightPx(startDateTime: Date | string, endDateTime: Date
 export const GRID_HEIGHT_PX = TOTAL_HOURS * HOUR_HEIGHT_PX;
 
 /**
- * Convert time string "HH:MM" + date to a full Date.
+ * Convert time string "HH:MM" + date string "YYYY-MM-DD" to a Date object.
  */
 export function combineDateAndTime(dateStr: string, timeStr: string): Date {
   const [year, month, day] = dateStr.split("-").map(Number);
@@ -100,7 +109,7 @@ export function combineDateAndTime(dateStr: string, timeStr: string): Date {
 }
 
 /**
- * Check if an event is within the visible grid (6AM–11PM).
+ * Check if an event is within the visible grid (HOURS_START to HOURS_END).
  */
 export function isInGridRange(startDateTime: Date | string): boolean {
   const d = typeof startDateTime === "string" ? parseISO(startDateTime) : startDateTime;
@@ -109,14 +118,17 @@ export function isInGridRange(startDateTime: Date | string): boolean {
 }
 
 /**
- * Generate hour labels for the time column: ["6 AM", "7 AM", ..., "10 PM"]
+ * Generate hour slot definitions for the grid.
  */
-export function generateTimeLabels(): string[] {
+export function generateTimeSlots(): Array<{ label: string; hour: number }> {
   return Array.from({ length: TOTAL_HOURS }, (_, i) => {
     const hour = HOURS_START + i;
-    if (hour === 12) return "12 PM";
-    if (hour < 12) return `${hour} AM`;
-    return `${hour - 12} PM`;
+    const period = hour >= 12 ? "PM" : "AM";
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    return {
+      label: `${displayHour}:00 ${period}`,
+      hour,
+    };
   });
 }
 
@@ -125,7 +137,24 @@ export function generateTimeLabels(): string[] {
  */
 export function getCurrentTimeTopPx(): number {
   const now = new Date();
-  return getEventTopPx(now);
+  const hours = getHours(now) - HOURS_START;
+  const minutes = getMinutes(now);
+  return (hours + minutes / 60) * HOUR_HEIGHT_PX;
+}
+
+/**
+ * Check if the live time indicator should be visible for the displayed week/day.
+ */
+export function isCurrentTimeVisible(displayedDate: Date, viewMode: "day" | "week" | "agenda"): boolean {
+  const now = new Date();
+  const currentHour = getHours(now);
+  if (currentHour < HOURS_START || currentHour >= HOURS_END) return false;
+
+  if (viewMode === "day") {
+    return isSameDay(displayedDate, now);
+  }
+  const week = getWeekDays(displayedDate);
+  return week.some((d) => isSameDay(d, now));
 }
 
 /**
@@ -134,7 +163,7 @@ export function getCurrentTimeTopPx(): number {
 export function formatDuration(start: Date | string, end: Date | string): string {
   const s = typeof start === "string" ? parseISO(start) : start;
   const e = typeof end === "string" ? parseISO(end) : end;
-  const mins = differenceInMinutes(e, s);
+  const mins = Math.max(differenceInMinutes(e, s), 0);
   const h = Math.floor(mins / 60);
   const m = mins % 60;
   if (h === 0) return `${m}m`;
@@ -143,14 +172,16 @@ export function formatDuration(start: Date | string, end: Date | string): string
 }
 
 /**
- * Navigate one week forward.
+ * Navigate forward.
  */
 export const nextWeek = (date: Date): Date => addWeeks(date, 1);
+export const nextDay = (date: Date): Date => addDays(date, 1);
 
 /**
- * Navigate one week backward.
+ * Navigate backward.
  */
 export const prevWeek = (date: Date): Date => subWeeks(date, 1);
+export const prevDay = (date: Date): Date => subDays(date, 1);
 
 /**
  * Get start and end of week as ISO strings for API queries.
@@ -163,17 +194,25 @@ export function getWeekBounds(date: Date): { startDate: string; endDate: string 
 }
 
 /**
- * Friendly countdown: "in 30 min", "in 2h", "Tomorrow at 9 AM"
+ * Friendly countdown: "in 30m", "in 2h 15m", "Tomorrow at 9:00 AM"
  */
 export function formatCountdown(date: Date | string): string {
   const target = typeof date === "string" ? parseISO(date) : date;
   const now = new Date();
   const mins = differenceInMinutes(target, now);
-  if (mins < 0) return "Passed";
+  if (mins < 0) return "Started";
+  if (mins === 0) return "Now";
   if (mins < 60) return `in ${mins}m`;
-  if (mins < 1440) return `in ${Math.floor(mins / 60)}h ${mins % 60 > 0 ? `${mins % 60}m` : ""}`;
-  if (isSameDay(target, addDays(now, 1))) return `Tomorrow at ${format(target, "h:mm a")}`;
+  if (mins < 1440) {
+    const h = Math.floor(mins / 60);
+    const remM = mins % 60;
+    return `in ${h}h${remM > 0 ? ` ${remM}m` : ""}`;
+  }
+  if (isSameDay(target, addDays(now, 1))) {
+    return `Tomorrow at ${format(target, "h:mm a")}`;
+  }
   return format(target, "EEE, MMM d 'at' h:mm a");
 }
 
-export { isSameDay, isToday, parseISO, format, addDays, startOfDay, endOfDay };
+export { isSameDay, isToday, parseISO, format, addDays, subDays, startOfDay, endOfDay, setHours, setMinutes, differenceInMinutes };
+

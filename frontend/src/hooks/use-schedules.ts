@@ -142,11 +142,11 @@ export function useSchedules(filters?: ScheduleFilters) {
         const end = new Date(filters.endDate);
         all = all.filter((s) => new Date(s.startDateTime) <= end);
       }
-      if (filters?.category) {
+      if (filters?.category && filters.category !== "all") {
         all = all.filter((s) => s.category === filters.category);
       }
       if (filters?.search) {
-        const q = filters.search.toLowerCase();
+        const q = filters.search.toLowerCase().trim();
         all = all.filter(
           (s) =>
             s.title.toLowerCase().includes(q) ||
@@ -155,8 +155,11 @@ export function useSchedules(filters?: ScheduleFilters) {
             s.location?.toLowerCase().includes(q)
         );
       }
-      if (filters?.status) {
+      if (filters?.status && filters.status !== "all") {
         all = all.filter((s) => s.status === filters.status);
+      }
+      if (filters?.hideCompleted) {
+        all = all.filter((s) => s.status !== "completed");
       }
 
       all.sort(
@@ -176,6 +179,7 @@ export function useSchedules(filters?: ScheduleFilters) {
     filters?.category,
     filters?.search,
     filters?.status,
+    filters?.hideCompleted,
   ]);
 
   useEffect(() => {

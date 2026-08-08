@@ -70,9 +70,10 @@ export interface QuickAddValues {
 export interface ScheduleFilters {
   startDate?: string;
   endDate?: string;
-  category?: EventCategory;
+  category?: EventCategory | "all";
   search?: string;
-  status?: ScheduleStatus;
+  status?: ScheduleStatus | "all";
+  hideCompleted?: boolean;
 }
 
 export interface ApiResponse<T = unknown> {
@@ -84,50 +85,77 @@ export interface ApiResponse<T = unknown> {
 
 export type EditRecurrenceScope = "this" | "future" | "all";
 
-export const CATEGORY_CONFIG: Record<
-  EventCategory,
-  { label: string; color: string; bgClass: string; borderClass: string; textClass: string }
-> = {
+export interface CategoryStyle {
+  label: string;
+  color: string;
+  accentColor: string;
+  bgClass: string;
+  borderClass: string;
+  textClass: string;
+  badgeBg: string;
+  badgeText: string;
+}
+
+export const CATEGORY_CONFIG: Record<EventCategory, CategoryStyle> = {
   class: {
     label: "Class",
-    color: "#6366f1",
-    bgClass: "bg-indigo-100",
-    borderClass: "border-indigo-400",
-    textClass: "text-indigo-700",
+    color: "#4f46e5",
+    accentColor: "#6366f1",
+    bgClass: "bg-[#eef2ff]",
+    borderClass: "border-[#818cf8]",
+    textClass: "text-[#312e81]",
+    badgeBg: "bg-[#e0e7ff]",
+    badgeText: "text-[#4338ca]",
   },
   lab: {
     label: "Lab",
-    color: "#06b6d4",
-    bgClass: "bg-cyan-100",
-    borderClass: "border-cyan-400",
-    textClass: "text-cyan-700",
+    color: "#0891b2",
+    accentColor: "#06b6d4",
+    bgClass: "bg-[#ecfeff]",
+    borderClass: "border-[#38bdf8]",
+    textClass: "text-[#164e63]",
+    badgeBg: "bg-[#cffafe]",
+    badgeText: "text-[#0e7490]",
   },
   study: {
     label: "Study",
-    color: "#22c55e",
-    bgClass: "bg-green-100",
-    borderClass: "border-green-400",
-    textClass: "text-green-700",
+    color: "#059669",
+    accentColor: "#10b981",
+    bgClass: "bg-[#ecfdf5]",
+    borderClass: "border-[#34d399]",
+    textClass: "text-[#064e3b]",
+    badgeBg: "bg-[#d1fae5]",
+    badgeText: "text-[#047857]",
   },
   assignment: {
     label: "Assignment",
-    color: "#f97316",
-    bgClass: "bg-orange-100",
-    borderClass: "border-orange-400",
-    textClass: "text-orange-700",
+    color: "#d97706",
+    accentColor: "#f59e0b",
+    bgClass: "bg-[#fffbeb]",
+    borderClass: "border-[#fbbf24]",
+    textClass: "text-[#78350f]",
+    badgeBg: "bg-[#fef3c7]",
+    badgeText: "text-[#b45309]",
   },
   exam: {
     label: "Exam",
-    color: "#ef4444",
-    bgClass: "bg-red-100",
-    borderClass: "border-red-400",
-    textClass: "text-red-700",
+    color: "#dc2626",
+    accentColor: "#ef4444",
+    bgClass: "bg-[#fef2f2]",
+    borderClass: "border-[#f87171]",
+    textClass: "text-[#7f1d1d]",
+    badgeBg: "bg-[#fee2e2]",
+    badgeText: "text-[#b91c1c]",
   },
   personal: {
     label: "Personal",
-    color: "#a855f7",
-    bgClass: "bg-purple-100",
-    borderClass: "border-purple-400",
-    textClass: "text-purple-700",
+    color: "#7c3aed",
+    accentColor: "#8b5cf6",
+    bgClass: "bg-[#faf5ff]",
+    borderClass: "border-[#c084fc]",
+    textClass: "text-[#581c87]",
+    badgeBg: "bg-[#f3e8ff]",
+    badgeText: "text-[#6d28d9]",
   },
 };
+

@@ -121,9 +121,12 @@ const ScheduleSchema = new Schema<ISchedule>(
     timestamps: true,
     toJSON: {
       virtuals: true,
-      transform: (_doc, ret) => {
-        ret.id = ret._id.toString();
+      transform: (_doc, ret: Record<string, unknown>) => {
+        if (ret._id) {
+          ret.id = (ret._id as { toString(): string }).toString();
+        }
         delete ret.__v;
+        return ret;
       },
     },
   }

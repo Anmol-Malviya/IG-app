@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Schedule from "@/models/Schedule";
-import { scheduleApiSchema } from "@/lib/schedule-validation";
 import mongoose from "mongoose";
+
 
 function getUserId(request: NextRequest): string | null {
   return request.headers.get("x-user-id");
