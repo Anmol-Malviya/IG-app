@@ -1,187 +1,154 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  FolderOpen,
+  GraduationCap,
+  ListTodo,
+  Sparkles,
+} from "lucide-react";
 import { useAuth } from "@/providers/AuthProvider";
 
-interface FeatureItem {
-  id: string;
-  name: string;
-  desc: string;
-  path: string;
-  colorClass: string;
-  svgIcon: React.ReactNode;
-}
+const features = [
+  {
+    number: "01",
+    title: "Weekly Schedule",
+    description: "Plan classes and study blocks across the week without clutter.",
+    href: "/services/weekly-schedule",
+    icon: CalendarDays,
+    iconClass: "bg-indigo-50 text-indigo-700",
+    accentClass: "from-indigo-500/12 via-indigo-500/5 to-transparent",
+  },
+  {
+    number: "02",
+    title: "Task & Assignment Track",
+    description: "Keep deadlines, priorities, and completion status in one focused view.",
+    href: "/services/assignments",
+    icon: ListTodo,
+    iconClass: "bg-emerald-50 text-emerald-700",
+    accentClass: "from-emerald-500/12 via-emerald-500/5 to-transparent",
+  },
+  {
+    number: "03",
+    title: "Exam & Study Planner",
+    description: "Track exam dates and preparation progress with a clear study plan.",
+    href: "/services/exam-planner",
+    icon: GraduationCap,
+    iconClass: "bg-amber-50 text-amber-700",
+    accentClass: "from-amber-500/12 via-amber-500/5 to-transparent",
+  },
+  {
+    number: "04",
+    title: "Quick Links & Resources",
+    description: "Save important portals, notes, files, and study links for quick access.",
+    href: "/services/resources",
+    icon: FolderOpen,
+    iconClass: "bg-violet-50 text-violet-700",
+    accentClass: "from-violet-500/12 via-violet-500/5 to-transparent",
+  },
+];
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const features: FeatureItem[] = [
-    {
-      id: "reminders",
-      name: "Reminders",
-      desc: "Stay updated on notifications",
-      path: "/services/reminders",
-      colorClass: "icon-reminders",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-      )
-    },
-    {
-      id: "assignments",
-      name: "Assignments",
-      desc: "Track assignment deadlines",
-      path: "/services/assignments",
-      colorClass: "icon-assignments",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
-      )
-    },
-    {
-      id: "notes",
-      name: "Notes",
-      desc: "Jot down lectures and tasks",
-      path: "/services/notes",
-      colorClass: "icon-notes",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-      )
-    },
-    {
-      id: "exam-planner",
-      name: "Exam Planner",
-      desc: "Prep and schedule upcoming exams",
-      path: "/services/exam-planner",
-      colorClass: "icon-exams",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
-      )
-    },
-    {
-      id: "study-planner",
-      name: "Study Planner",
-      desc: "Pomodoro sessions & goals",
-      path: "/services/study-planner",
-      colorClass: "icon-study",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
-      )
-    },
-    {
-      id: "todo-list",
-      name: "To-Do List",
-      desc: "Quick checklist for your day",
-      path: "/services/todo-list",
-      colorClass: "icon-todo",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      )
-    },
-    {
-      id: "resources",
-      name: "Resources",
-      desc: "Organize files and study sheets",
-      path: "/services/resources",
-      colorClass: "icon-resources",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M2 10h20"/></svg>
-      )
-    },
-    {
-      id: "expenses",
-      name: "Expenses",
-      desc: "Track and budget daily spendings",
-      path: "/services/expenses",
-      colorClass: "icon-expenses",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="12" x2="12" y1="5" y2="19"/><circle cx="12" cy="12" r="3"/></svg>
-      )
-    },
-    {
-      id: "quick-tools",
-      name: "Quick Tools",
-      desc: "Converters and calculators",
-      path: "/services/quick-tools",
-      colorClass: "icon-tools",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      )
-    },
-    {
-      id: "documents",
-      name: "Documents",
-      desc: "Manage academic worksheets",
-      path: "/services/documents",
-      colorClass: "icon-docs",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-      )
-    },
-    {
-      id: "important-links",
-      name: "Important Links",
-      desc: "Bookmarked portals and urls",
-      path: "/services/important-links",
-      colorClass: "icon-links",
-      svgIcon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      )
-    }
-  ];
-
-  const filteredFeatures = features.filter(
-    (feature) =>
-      feature.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      feature.desc.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const firstName = user?.firstName || "Student";
 
   return (
-    <div className="dashboard-page">
-      {/* Welcome banner */}
-      <div className="welcome-card">
-        <h2>Welcome back, {user?.firstName || "Student"}! 👋</h2>
-        <p>Your workspace is ready. Access all tools and trackers below.</p>
-      </div>
+    <div className="space-y-7 sm:space-y-8">
+      <section className="relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-slate-950 px-5 py-7 text-white shadow-[0_20px_60px_-35px_rgba(15,23,42,0.8)] sm:px-8 sm:py-9 lg:px-10 lg:py-10">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" />
 
-      {/* Grid container */}
-      <div className="features-container">
-        <div className="features-top">
-          <h2 className="features-title">All Features</h2>
-          
-          {/* Search box matching reference image design icon indicator */}
-          <div className="features-search">
-            <span className="features-search-icon">🔍</span>
-            <input
-              type="text"
-              placeholder="Search features..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="features-search-input"
-            />
+        <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300">
+              <Sparkles size={14} className="text-indigo-300" />
+              Focused student workspace
+            </div>
+            <p className="mb-2 text-sm font-semibold text-slate-400">Your focused dashboard</p>
+            <h2 className="max-w-xl text-3xl font-black tracking-[-0.045em] sm:text-4xl lg:text-[42px] lg:leading-[1.05]">
+              Welcome back, {firstName}.
+            </h2>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
+              Everything you need for classes, deadlines, exams, and study resources — nothing extra.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
+              <p className="text-2xl font-black tracking-tight">4</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">Core tools</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
+              <p className="text-2xl font-black tracking-tight">1</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">Workspace</p>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Feature cards grid */}
-        <div className="features-grid">
-          {filteredFeatures.map((feature) => (
-            <Link key={feature.id} href={feature.path} className="feature-card">
-              <div className={`feature-icon-wrapper ${feature.colorClass}`}>
-                {feature.svgIcon}
-              </div>
-              <div className="feature-info">
-                <span className="feature-name">{feature.name}</span>
-                <span className="feature-desc">{feature.desc}</span>
-              </div>
-            </Link>
-          ))}
-          {filteredFeatures.length === 0 && (
-            <div className="no-results-message" style={{ gridColumn: "1 / -1", textAlign: "center", padding: "2rem", color: "var(--muted-foreground)" }}>
-              No matching features found.
-            </div>
-          )}
+      <section>
+        <div className="mb-4 flex items-end justify-between gap-4 sm:mb-5">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600">Core features</p>
+            <h3 className="mt-1 text-xl font-extrabold tracking-[-0.025em] text-slate-950 sm:text-2xl">
+              Your study command center
+            </h3>
+          </div>
+          <p className="hidden max-w-sm text-right text-sm leading-6 text-slate-500 md:block">
+            Designed to stay simple on mobile and productive on desktop.
+          </p>
         </div>
-      </div>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:gap-5">
+          {features.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <Link
+                key={feature.title}
+                href={feature.href}
+                className="group relative overflow-hidden rounded-[24px] border border-slate-200/80 bg-white p-5 text-slate-950 no-underline shadow-[0_10px_35px_-28px_rgba(15,23,42,0.5)] transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-[0_24px_55px_-30px_rgba(15,23,42,0.35)] sm:p-6"
+              >
+                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.accentClass} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
+                <div className="relative">
+                  <div className="mb-8 flex items-start justify-between gap-4">
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${feature.iconClass}`}>
+                      <Icon size={22} strokeWidth={2.1} />
+                    </div>
+                    <span className="text-xs font-black tracking-[0.16em] text-slate-300">{feature.number}</span>
+                  </div>
+
+                  <h4 className="max-w-sm text-xl font-extrabold tracking-[-0.025em] sm:text-[22px]">
+                    {feature.title}
+                  </h4>
+                  <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+                    {feature.description}
+                  </p>
+
+                  <div className="mt-6 flex items-center gap-2 text-sm font-bold text-slate-900">
+                    Open workspace
+                    <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="rounded-[24px] border border-slate-200/80 bg-white px-5 py-5 sm:flex sm:items-center sm:justify-between sm:px-6">
+        <div>
+          <p className="text-sm font-extrabold text-slate-950">Built for quick daily use</p>
+          <p className="mt-1 text-sm leading-6 text-slate-500">
+            Open the app, check what matters, update it, and get back to studying.
+          </p>
+        </div>
+        <div className="mt-4 inline-flex rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 sm:mt-0">
+          Mobile-first • Minimal • Fast
+        </div>
+      </section>
     </div>
   );
 }
