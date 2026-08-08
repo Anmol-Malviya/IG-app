@@ -173,17 +173,11 @@ export function useSchedules(filters?: ScheduleFilters) {
     } finally {
       setIsLoading(false);
     }
-  }, [
-    filters?.startDate,
-    filters?.endDate,
-    filters?.category,
-    filters?.search,
-    filters?.status,
-    filters?.hideCompleted,
-  ]);
+  }, [filters]);
 
   useEffect(() => {
-    fetchSchedules();
+    const timeoutId = window.setTimeout(fetchSchedules, 0);
+    return () => window.clearTimeout(timeoutId);
   }, [fetchSchedules]);
 
   const createSchedule = useCallback(

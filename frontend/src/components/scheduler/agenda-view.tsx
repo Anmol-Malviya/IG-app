@@ -69,7 +69,7 @@ export function AgendaView({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="h-full overflow-y-auto overscroll-contain pr-1 space-y-4">
       {grouped.map(({ day, events: dayEvents }) => {
         const isCurrent = isToday(day);
         const dayFormatted = format(day, "EEEE, MMMM d");

@@ -40,15 +40,16 @@ export function CalendarToolbar({
       : formatWeekRange(currentDate);
 
   return (
-    <div className="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] p-3 sm:px-4 sm:py-3 flex flex-wrap items-center justify-between gap-3">
+    <div className="shrink-0 bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] p-3 sm:px-4 sm:py-3 flex flex-wrap items-center justify-between gap-3">
       {/* ── Left: Date Navigation ── */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex min-w-0 items-center gap-2 flex-wrap">
         <div className="flex items-center rounded-[10px] border border-slate-200 bg-white p-0.5 shadow-2xs">
           <button
             type="button"
             onClick={onPrev}
             className="w-8 h-8 rounded-[8px] flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
             title="Previous"
+            aria-label="Go to previous period"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -64,12 +65,13 @@ export function CalendarToolbar({
             onClick={onNext}
             className="w-8 h-8 rounded-[8px] flex items-center justify-center text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
             title="Next"
+            aria-label="Go to next period"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        <span className="text-[13.5px] font-bold text-slate-900 px-1 whitespace-nowrap">
+        <span className="max-w-[240px] truncate text-[13.5px] font-bold text-slate-900 px-1 whitespace-nowrap">
           {dateTitle}
         </span>
       </div>
@@ -81,6 +83,7 @@ export function CalendarToolbar({
           <button
             type="button"
             onClick={() => onViewModeChange("day")}
+            aria-pressed={viewMode === "day"}
             className={`px-3 py-1 text-[12px] font-bold rounded-[8px] transition-all flex items-center gap-1.5 ${
               viewMode === "day"
                 ? "bg-white text-[#4F46E5] shadow-xs"
@@ -93,6 +96,7 @@ export function CalendarToolbar({
           <button
             type="button"
             onClick={() => onViewModeChange("week")}
+            aria-pressed={viewMode === "week"}
             className={`px-3 py-1 text-[12px] font-bold rounded-[8px] transition-all flex items-center gap-1.5 ${
               viewMode === "week"
                 ? "bg-white text-[#4F46E5] shadow-xs"
@@ -105,6 +109,7 @@ export function CalendarToolbar({
           <button
             type="button"
             onClick={() => onViewModeChange("agenda")}
+            aria-pressed={viewMode === "agenda"}
             className={`px-3 py-1 text-[12px] font-bold rounded-[8px] transition-all flex items-center gap-1.5 ${
               viewMode === "agenda"
                 ? "bg-white text-[#4F46E5] shadow-xs"
@@ -127,7 +132,7 @@ export function CalendarToolbar({
         <button
           type="button"
           onClick={onAddEvent}
-          className="h-9 px-4 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-[10px] text-[12.5px] font-bold shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer active:scale-98"
+          className="h-10 px-4 bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-[10px] text-[12.5px] font-bold shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer active:scale-98"
         >
           <Plus className="w-4 h-4" />
           <span>Add Event</span>

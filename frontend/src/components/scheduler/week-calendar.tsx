@@ -24,6 +24,7 @@ import {
 import { CalendarTimeColumn } from "./calendar-time-column";
 import { CalendarDayColumn } from "./calendar-day-column";
 import { ScheduleEventCard } from "./schedule-event-card";
+import { useCurrentMinute } from "@/hooks/use-current-minute";
 
 interface WeekCalendarProps {
   weekDays: Date[];
@@ -40,6 +41,7 @@ export function WeekCalendar({
   onSlotClick,
   onEventMove,
 }: WeekCalendarProps) {
+  const now = useCurrentMinute();
   const [activeDragEvent, setActiveDragEvent] = useState<Schedule | null>(null);
 
   const sensors = useSensors(
@@ -97,9 +99,9 @@ export function WeekCalendar({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden flex flex-col">
+      <div className="h-full min-h-[360px] bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden flex flex-col">
         {/* Horizontal scroll container for the calendar grid */}
-        <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-290px)] min-h-[500px]">
+        <div className="h-full min-h-0 overflow-auto overscroll-contain">
           <div className="min-w-[1122px] flex flex-col">
             {/* Sticky Calendar Day Header */}
             <div
@@ -107,7 +109,7 @@ export function WeekCalendar({
                 display: "grid",
                 gridTemplateColumns: "72px repeat(7, minmax(150px, 1fr))",
               }}
-              className="sticky top-0 z-30 bg-white/95 backdrop-blur-xs border-b border-slate-200"
+              className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200"
             >
               {/* Top-left corner box */}
               <div className="h-14 border-r border-slate-200 flex items-center justify-center bg-slate-50/70">
@@ -170,6 +172,7 @@ export function WeekCalendar({
                     onEventClick={onEventClick}
                     onSlotClick={onSlotClick}
                     isDraggingAny={activeDragEvent !== null}
+                    now={now}
                   />
                 );
               })}

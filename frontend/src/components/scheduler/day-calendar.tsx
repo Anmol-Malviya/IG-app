@@ -25,6 +25,7 @@ import { CalendarTimeColumn } from "./calendar-time-column";
 import { CalendarDayColumn } from "./calendar-day-column";
 import { ScheduleEventCard } from "./schedule-event-card";
 import { Calendar as CalendarIcon, Clock } from "lucide-react";
+import { useCurrentMinute } from "@/hooks/use-current-minute";
 
 
 interface DayCalendarProps {
@@ -42,6 +43,7 @@ export function DayCalendar({
   onSlotClick,
   onEventMove,
 }: DayCalendarProps) {
+  const now = useCurrentMinute();
   const [activeDragEvent, setActiveDragEvent] = useState<Schedule | null>(null);
 
   const sensors = useSensors(
@@ -97,7 +99,7 @@ export function DayCalendar({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden flex flex-col">
+      <div className="h-full min-h-[360px] bg-white rounded-[14px] border border-slate-200 shadow-[0_1px_3px_rgba(15,23,42,0.06)] overflow-hidden flex flex-col">
         {/* Day Header Banner */}
         <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -128,7 +130,7 @@ export function DayCalendar({
         </div>
 
         {/* Scrollable Timeline Grid */}
-        <div className="overflow-y-auto max-h-[calc(100vh-320px)] min-h-[500px]">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
           <div
             style={{
               display: "grid",
@@ -144,6 +146,7 @@ export function DayCalendar({
               onEventClick={onEventClick}
               onSlotClick={onSlotClick}
               isDraggingAny={activeDragEvent !== null}
+              now={now}
             />
           </div>
         </div>

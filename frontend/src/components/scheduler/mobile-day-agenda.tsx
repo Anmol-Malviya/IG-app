@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Schedule, CATEGORY_CONFIG } from "@/types/schedule";
 import { isToday, format, parseISO, formatTime } from "@/lib/date-utils";
 import { findNextUpcomingEvent } from "@/lib/scheduler-helpers";
+import { useCurrentMinute } from "@/hooks/use-current-minute";
 import { getCategoryIcon } from "./schedule-event-card";
 import { MobileDateStrip } from "./mobile-date-strip";
 import {
@@ -14,7 +15,6 @@ import {
   BookOpen,
   User,
   Plus,
-  Bell,
   Menu,
   GraduationCap,
   ChevronRight,
@@ -25,6 +25,9 @@ interface MobileDayAgendaProps {
   weekDays: Date[];
   selectedDay: Date;
   onSelectDay: (day: Date) => void;
+  onPrevWeek: () => void;
+  onNextWeek: () => void;
+  onToday: () => void;
   dayEvents: Schedule[];
   allEvents: Schedule[];
   onEventClick: (event: Schedule) => void;
@@ -35,16 +38,19 @@ export function MobileDayAgenda({
   weekDays,
   selectedDay,
   onSelectDay,
+  onPrevWeek,
+  onNextWeek,
+  onToday,
   dayEvents,
   allEvents,
   onEventClick,
   onAddClick,
 }: MobileDayAgendaProps) {
+  const now = useCurrentMinute();
   const isSelectedToday = isToday(selectedDay);
   const { event: nextEvent, countdown: nextCountdown, timeRange: nextTimeRange } =
-    findNextUpcomingEvent(allEvents);
+    findNextUpcomingEvent(allEvents, now);
 
-  const now = new Date();
   const nowTime = now.getTime();
 
   // Find the index before which the live time marker should be rendered
@@ -53,7 +59,10 @@ export function MobileDayAgenda({
     : -1;
 
   return (
-    <div className="lg:hidden w-full min-h-screen bg-[#F7F8FC] flex flex-col pb-20">
+    <div
+      data-scheduler
+      className="lg:hidden w-full min-h-screen bg-[#F7F8FC] flex flex-col pb-[calc(5rem+env(safe-area-inset-bottom))]"
+    >
       {/* ── Top Mobile Bar ── */}
       <header className="h-14 px-4 bg-white border-b border-slate-200 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
         <Link
@@ -70,10 +79,11 @@ export function MobileDayAgenda({
 
         <button
           type="button"
-          className="w-10 h-10 -mr-1 rounded-[10px] flex items-center justify-center text-slate-700 hover:bg-slate-100 transition-colors"
-          title="Notifications"
+          onClick={onToday}
+          className="min-w-10 h-10 -mr-1 rounded-[10px] px-2 flex items-center justify-center text-[11px] font-extrabold text-[#4F46E5] hover:bg-indigo-50 transition-colors"
+          title="Back to today"
         >
-          <Bell className="w-5 h-5" />
+          Today
         </button>
       </header>
 
@@ -82,6 +92,9 @@ export function MobileDayAgenda({
         weekDays={weekDays}
         selectedDay={selectedDay}
         onSelectDay={onSelectDay}
+        onPrevWeek={onPrevWeek}
+        onNextWeek={onNextWeek}
+        onToday={onToday}
       />
 
       <div className="p-4 space-y-4 flex-1">
@@ -97,7 +110,7 @@ export function MobileDayAgenda({
                   <GraduationCap className="w-4 h-4 text-[#7C3AED]" />
                 </div>
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                  Next Class
+                  Next Event
                 </span>
               </div>
               <span className="text-[12px] font-extrabold text-[#4F46E5] bg-indigo-50 px-2 py-0.5 rounded-full">
@@ -129,7 +142,7 @@ export function MobileDayAgenda({
           <div className="bg-white rounded-[14px] border border-slate-200 p-8 text-center shadow-2xs">
             <Calendar className="w-8 h-8 text-slate-300 mx-auto" />
             <h3 className="text-[13px] font-bold text-slate-800 mt-2">
-              No classes scheduled
+              No events scheduled
             </h3>
             <p className="text-[11px] text-slate-500 mt-1">Enjoy your free time!</p>
           </div>
@@ -209,6 +222,15 @@ export function MobileDayAgenda({
                 </React.Fragment>
               );
             })}
+
+            {isSelectedToday && liveMarkerIndex === -1 && (
+              <div className="flex items-center gap-2 py-1" aria-label="Current time">
+                <span className="text-[10px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full shadow-2xs">
+                  {format(now, "h:mm a")}
+                </span>
+                <div className="flex-1 h-[1.5px] bg-rose-400" />
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -217,14 +239,15 @@ export function MobileDayAgenda({
       <button
         type="button"
         onClick={onAddClick}
-        className="fixed bottom-20 right-5 w-13 h-13 rounded-full bg-[#4F46E5] text-white shadow-lg flex items-center justify-center text-xl font-bold active:scale-95 z-30 min-h-[48px] min-w-[48px] hover:bg-[#4338CA] transition-all"
+        className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-5 w-13 h-13 rounded-full bg-[#4F46E5] text-white shadow-lg flex items-center justify-center text-xl font-bold active:scale-95 z-30 min-h-[48px] min-w-[48px] hover:bg-[#4338CA] transition-all"
         title="Add Event"
+        aria-label="Add schedule event"
       >
         <Plus className="w-6 h-6" />
       </button>
 
       {/* ── Bottom App Tab Navigation ── */}
-      <nav className="h-16 bg-white border-t border-slate-200 flex items-center justify-around px-2 fixed bottom-0 left-0 right-0 z-30 shadow-[0_-2px_8px_rgba(15,23,42,0.04)]">
+      <nav className="min-h-16 bg-white border-t border-slate-200 flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)] fixed bottom-0 left-0 right-0 z-30 shadow-[0_-2px_8px_rgba(15,23,42,0.04)]" aria-label="Primary navigation">
         <Link
           href="/dashboard"
           className="flex flex-col items-center justify-center text-slate-500 hover:text-[#4F46E5] transition-colors min-h-[48px] min-w-[48px]"

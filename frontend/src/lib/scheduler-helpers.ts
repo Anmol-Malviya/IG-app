@@ -95,8 +95,10 @@ function assignColumnsToCluster(cluster: Schedule[], results: PositionedEvent[])
 /**
  * Compute Today's Classes count
  */
-export function calculateTodayClasses(events: Schedule[]): { count: number; active: number } {
-  const now = new Date();
+export function calculateTodayClasses(
+  events: Schedule[],
+  now = new Date()
+): { count: number; active: number } {
   const todayList = events.filter((e) => isSameDay(parseISO(e.startDateTime), now));
   const classes = todayList.filter((e) => e.category === "class" || e.category === "lab");
   const active = classes.filter((e) => e.status !== "completed").length;
@@ -109,14 +111,13 @@ export function calculateTodayClasses(events: Schedule[]): { count: number; acti
 /**
  * Compute Today's Study Duration and progress towards 4h goal
  */
-export function calculateStudyDuration(events: Schedule[], targetMinutes = 240): {
+export function calculateStudyDuration(events: Schedule[], targetMinutes = 240, now = new Date()): {
   totalMinutes: number;
   formattedDuration: string;
   progressPercent: number;
 } {
-  const now = new Date();
   const todayStudyEvents = events.filter(
-    (e) => isSameDay(parseISO(e.startDateTime), now) && (e.category === "study" || e.category === "assignment")
+    (e) => isSameDay(parseISO(e.startDateTime), now) && e.category === "study"
   );
 
   let totalMinutes = 0;
@@ -142,12 +143,11 @@ export function calculateStudyDuration(events: Schedule[], targetMinutes = 240):
 /**
  * Find the next upcoming event from all events
  */
-export function findNextUpcomingEvent(events: Schedule[]): {
+export function findNextUpcomingEvent(events: Schedule[], now = new Date()): {
   event: Schedule | null;
   countdown: string;
   timeRange: string;
 } {
-  const now = new Date();
   const upcoming = events
     .filter((e) => parseISO(e.startDateTime) > now && e.status === "scheduled")
     .sort((a, b) => parseISO(a.startDateTime).getTime() - parseISO(b.startDateTime).getTime())[0];
@@ -162,7 +162,7 @@ export function findNextUpcomingEvent(events: Schedule[]): {
 
   return {
     event: upcoming,
-    countdown: formatCountdown(upcoming.startDateTime),
+    countdown: formatCountdown(upcoming.startDateTime, now),
     timeRange: `${formatTime(upcoming.startDateTime)} – ${formatTime(upcoming.endDateTime)}`,
   };
 }
@@ -170,13 +170,16 @@ export function findNextUpcomingEvent(events: Schedule[]): {
 /**
  * Calculate count of pending items (assignments, exams, tasks)
  */
-export function calculatePendingCount(events: Schedule[]): {
+export function calculatePendingCount(events: Schedule[], now = new Date()): {
   total: number;
   assignments: number;
   exams: number;
 } {
   const pending = events.filter(
-    (e) => (e.category === "assignment" || e.category === "exam") && e.status === "scheduled"
+    (e) =>
+      (e.category === "assignment" || e.category === "exam") &&
+      e.status === "scheduled" &&
+      parseISO(e.endDateTime) >= now
   );
   const assignments = pending.filter((e) => e.category === "assignment").length;
   const exams = pending.filter((e) => e.category === "exam").length;
@@ -194,12 +197,14 @@ export function calculatePendingCount(events: Schedule[]): {
 export function countActiveFilters(filters?: {
   category?: EventCategory | "all";
   status?: Schedule["status"] | "all";
+  day?: number | "all";
   hideCompleted?: boolean;
   search?: string;
 }): number {
   let count = 0;
   if (filters?.category && filters.category !== "all") count++;
   if (filters?.status && filters.status !== "all") count++;
+  if (filters?.day !== undefined && filters.day !== "all") count++;
   if (filters?.hideCompleted) count++;
   if (filters?.search && filters.search.trim().length > 0) count++;
   return count;

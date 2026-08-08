@@ -135,8 +135,7 @@ export function generateTimeSlots(): Array<{ label: string; hour: number }> {
 /**
  * Get the current time top offset for the live time indicator.
  */
-export function getCurrentTimeTopPx(): number {
-  const now = new Date();
+export function getCurrentTimeTopPx(now = new Date()): number {
   const hours = getHours(now) - HOURS_START;
   const minutes = getMinutes(now);
   return (hours + minutes / 60) * HOUR_HEIGHT_PX;
@@ -196,9 +195,8 @@ export function getWeekBounds(date: Date): { startDate: string; endDate: string 
 /**
  * Friendly countdown: "in 30m", "in 2h 15m", "Tomorrow at 9:00 AM"
  */
-export function formatCountdown(date: Date | string): string {
+export function formatCountdown(date: Date | string, now = new Date()): string {
   const target = typeof date === "string" ? parseISO(date) : date;
-  const now = new Date();
   const mins = differenceInMinutes(target, now);
   if (mins < 0) return "Started";
   if (mins === 0) return "Now";
@@ -215,4 +213,3 @@ export function formatCountdown(date: Date | string): string {
 }
 
 export { isSameDay, isToday, parseISO, format, addDays, subDays, startOfDay, endOfDay, setHours, setMinutes, differenceInMinutes };
-
